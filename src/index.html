@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Mascota</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <h1>Tu Mascota</h1>
+    <div id="game-container">
+        <div class="coins">
+            <span class="stat">💰 <span id="monedas"></span></span> 
+        </div>
+        <img id="icon-logo" onclick="location.href='misiones/logros.html'" src="../assets/images/logo.png" alt="Seccion de Logros">
+        <img id="mascota" src="../assets/images/pixels.png" alt="Tamagotchi" width="200">
+        <div id="stats">
+            <span class="stat">💤 <span id="energia"></span></span>
+            <span class="stat">😊 <span id="felicidad"></span></span>
+            <span class="stat">🛁 <span id="higiene"></span></span>
+            <span class="stat">🏆 <span id="nivel"></span></span>
+            <span class="stat">⭐ <span id="exp"></span></span>
+        </div>
+        
+        <button id="alimentar">🍎 Alimentar</button>
+        <button id="jugar">🎾 Jugar</button>
+        <button id="duchar">🛁 Bañar</button>
+        <button id="descansar">😴 Descansar</button>
+    </div>
+    
+    <script type="module" src="button.js"></script>
+</body>
+</html>

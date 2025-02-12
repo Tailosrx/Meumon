@@ -1,0 +1,65 @@
+[
+    {
+        "id": 1,
+        "name": "Primer alimento",
+        "description": "Alimenta a tu Tamagotchi por primera vez.",
+        "condition": "pet.energia > 50",
+        "progress": "pet.energia / 100",
+        "unlocked": false,
+        "reward": 10
+    },
+    {
+        "id": 2,
+        "name": "Primer juego",
+        "description": "Juega con tu Tamagotchi por primera vez.",
+        "condition": "pet.felicidad > 50",
+        "progress": "pet.felicidad / 100",
+        "unlocked": false,
+        "reward": 10
+    },
+    {
+        "id": 3,
+        "name": "Limpieza total",
+        "description": "Baña a tu Tamagotchi por primera vez.",
+        "condition": "pet.higiene === 100",
+        "progress": "pet.higiene / 100",
+        "unlocked": false,
+        "reward": 15
+    },
+    {
+        "id": 4,
+        "name": "Nivel 2",
+        "description": "Sube a tu Tamagotchi al nivel 2.",
+        "condition": "pet.lvl >= 2",
+        "progress": "pet.lvl / 2",
+        "unlocked": false,
+        "reward": 20
+    },
+    {
+        "id": 5,
+        "name": "Maratón de juegos",
+        "description": "Juega con tu Tamagotchi 10 veces.",
+        "condition": "pet.juegos >= 10",
+        "progress": "pet.juegos / 10",
+        "unlocked": false,
+        "reward": 25
+    },
+    {
+        "id": 6,
+        "name": "Maestro de la higiene",
+        "description": "Mantén la higiene de tu Tamagotchi al 100% durante 5 minutos.",
+        "condition": "pet.higiene === 100 && pet.tiempoHigiene >= 300000",
+        "progress": "pet.tiempoHigiene / 300000",
+        "unlocked": false,
+        "reward": 30
+    },
+    {
+        "id": 7,
+        "name": "Amante de la comida",
+        "description": "Alimenta a tu Tamagotchi 20 veces.",
+        "condition": "pet.alimentos >= 20",
+        "progress": "pet.alimentos / 20",
+        "unlocked": false,
+        "reward": 35
+    }
+]
