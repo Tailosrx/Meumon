@@ -2,14 +2,25 @@
   "name": "Meumon",
   "version": "1.0.0",
   "description": "Mi aplicación de mascota en Electron",
-  "main": "main.js",  
+  "main": "main.js", 
+  "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Tailosrx",
+        "repo": "Meumon"
+      }
+    ]
+  },
   "scripts": {
-    "start": "electron .",  
-    "build": "electron-packager . miAplicacion --platform=win32 --arch=x64 --out=dist"  
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "devDependencies": {
     "electron": "^25.0.0",
     "electron-packager": "^15.0.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
   }
 }
-
