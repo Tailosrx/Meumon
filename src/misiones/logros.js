@@ -1,11 +1,18 @@
-import Pet from './pet.js';
-import { actualizarMonedas } from './button.js';
+import Pet from '../pet.js';
+import { actualizarMonedas } from '../button.js';
 
-document.addEventListener("DOMContentLoaded", async () => {
-    const response = await fetch('achievements.json');
-    const achievements = await response.json();
-
-    const mascota = Pet.cargarEstado(achievements);
+document.addEventListener("DOMContentLoaded", () => {
+    const mascota = {
+        logros: [
+            { id: "1", descripcion: "Completar la primera misión", recompensa: 100, nivel: 1, completado: false },
+            { id: "2", descripcion: "Alcanzar nivel 5", recompensa: 200, nivel: 1, completado: false },
+            { id: "3", descripcion: "Completar la segunda misión", recompensa: 300, nivel: 2, completado: false }
+            // Añadir más logros aquí
+        ],
+        monedas: 0,
+        nivel: 1,
+        // Otros atributos de mascota
+    };
 
     actualizarLogros(mascota);
     actualizarMonedas(mascota);
@@ -17,10 +24,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    document.getElementById("volver")?.addEventListener("click", () => {
-        window.location.href = 'index.html';
+    document.getElementById("volver").addEventListener("click", () => {
+        window.location.href = '../index.html';
     });
 });
+
+function completarLogro(id, mascota, button) {
+    const logro = mascota.logros.find(logro => logro.id === id);
+    if (logro && !logro.completado) {
+        logro.completado = true;
+        mascota.monedas += logro.recompensa;
+        actualizarMonedas(mascota);
+
+        const logroElem = button.closest('.logro');
+        if (logroElem) {
+            logroElem.style.backgroundColor = 'lightgreen';
+        }
+
+        button.disabled = true;
+
+        // Verificar si todos los logros del nivel actual están completados
+        const logrosNivelActual = mascota.logros.filter(logro => logro.nivel === mascota.nivel);
+        const todosCompletados = logrosNivelActual.every(logro => logro.completado);
+
+        if (todosCompletados) {
+            mascota.nivel++;
+            desbloquearLogros(mascota.nivel);
+        }
+    }
+}
 
 function actualizarLogros(mascota) {
     const logrosElem = document.getElementById("logros");
@@ -28,31 +60,28 @@ function actualizarLogros(mascota) {
         console.error("No se encontró el elemento con id 'logros'");
         return;
     }
-    logrosElem.innerHTML = "";
-    mascota.achievements.forEach(achievement => {
-        const progreso = achievement.unlocked ? 100 : new Function('pet', `return ${achievement.progress}`)(mascota) * 100;
-        const logroElem = document.createElement("li");
-        logroElem.innerHTML = `
-            <div>
-                <span>${achievement.name}: ${achievement.unlocked ? "Desbloqueado" : "Pendiente"}</span>
-                <div class="progress-bar">
-                    <div class="progress" style="width: ${progreso}%"></div>
-                </div>
-                ${achievement.unlocked ? '<button class="finalizar" data-id="' + achievement.id + '">Completar y ganar monedas</button>' : ''}
-            </div>
-        `;
-        logrosElem.appendChild(logroElem);
+
+    mascota.logros.forEach(logro => {
+        const logroElem = document.querySelector(`.logro[data-id="${logro.id}"]`);
+        if (logroElem) {
+            if (logro.completado) {
+                logroElem.style.backgroundColor = 'lightgreen';
+                const button = logroElem.querySelector('.finalizar');
+                if (button) {
+                    button.disabled = true;
+                }
+            } else if (logro.nivel > mascota.nivel) {
+                const button = logroElem.querySelector('.finalizar');
+                if (button) {
+                    button.disabled = true;
+                }
+            }
+        }
     });
 }
 
-// Modificar la función completarLogro para actualizar las monedas
-function completarLogro(id, mascota, button) {
-    const achievement = mascota.achievements.find(a => a.id == id);
-    if (achievement && achievement.unlocked) {
-        console.log(`¡Logro completado! ${achievement.name}`);
-        mascota.monedas = (mascota.monedas || 0) + achievement.reward;
-        mascota.guardarEstado();
-        button.style.display = "none";
-    }
+function desbloquearLogros(nivel) {
+    document.querySelectorAll(`.logro[data-nivel="${nivel}"] .finalizar`).forEach(button => {
+        button.disabled = false;
+    });
 }
-

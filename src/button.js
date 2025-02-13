@@ -1,8 +1,9 @@
 import Pet from './pet.js';
+export { actualizarMonedas };
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch('misiones/achievements.json'); // Asegúrate de que la ruta sea correcta
+        const response = await fetch('achievements.json'); 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -11,8 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const mascota = Pet.cargarEstado(achievements);
 
         actualizarStats(mascota);
-        actualizarMonedas(mascota); // Asegurarse de que las monedas se actualicen al cargar la página
-
+        actualizarMonedas(mascota); 
         document.getElementById("alimentar")?.addEventListener("click", () => {
             mascota.alimentar();
             actualizarStats(mascota);
@@ -53,18 +53,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function actualizarStats(mascota) {
-    document.getElementById("energia").textContent = mascota.energia;
-    document.getElementById("felicidad").textContent = mascota.felicidad;
-    document.getElementById("higiene").textContent = mascota.higiene;
-    document.getElementById("nivel").textContent = mascota.nivel;
-    document.getElementById("exp").textContent = mascota.exp;
+    const energiaElem = document.getElementById("energia");
+    const felicidadElem = document.getElementById("felicidad");
+    const higieneElem = document.getElementById("higiene");
+    const nivelElem = document.getElementById("nivel");
+    const expElem = document.getElementById("exp");
+
+    if (energiaElem) energiaElem.textContent = mascota.energia;
+    if (felicidadElem) felicidadElem.textContent = mascota.felicidad;
+    if (higieneElem) higieneElem.textContent = mascota.higiene;
+    if (nivelElem) nivelElem.textContent = mascota.nivel;
+    if (expElem) expElem.textContent = mascota.exp;
 }
 
 function actualizarMonedas(mascota) {
     const monedasElem = document.getElementById("monedas");
-    if (!monedasElem) {
-        console.error("No se encontró el elemento con id 'monedas'");
-        return;
-    }
     monedasElem.textContent = `Monedas: ${mascota.monedas}`;
 }

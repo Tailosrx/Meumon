@@ -17,8 +17,8 @@ export default class Pet {
   }
 
   alimentar() {
-      this.energia += 20;
-      this.felicidad += 15;
+      this.energia += 10;
+      this.felicidad += 5;
       this.alimentos += 1;
       if (this.energia > 100) this.energia = 100;
       if (this.felicidad > 100) this.felicidad = 100;
@@ -42,9 +42,9 @@ export default class Pet {
 
   bañar() {
       this.higiene = 100;
-      this.actualizarImagen("assets/images/pet_ducha.png");
+      this.actualizarImagen("../assets/images/pet_ducha.png");
       setTimeout(() => {
-          this.actualizarImagen("assets/images/pixels.png");
+          this.actualizarImagen("../assets/images/pixels.png");
       }, 2000);
       this.ganarExp(5);
       this.actualizarEstado();
@@ -57,7 +57,7 @@ export default class Pet {
           this.estado = "durmiendo";
           this.energia = 100;
           this.pararTemporizadores();
-          this.actualizarImagen("assets/images/pet_sleep.png");
+          this.actualizarImagen("../assets/images/pet_sleep.png");
           document.getElementById("descansar").innerText = "Despertar";
           this.guardarEstado();
       }
@@ -67,7 +67,7 @@ export default class Pet {
       if (this.estado === "durmiendo") {
           this.estado = "activo";
           this.iniciarTemporizadores();
-          this.actualizarImagen("assets/images/pixels.png");
+          this.actualizarImagen("../assets/images/pixels.png");
           this.actualizarEstado();
           document.getElementById("descansar").innerText = "Descansar";
           this.guardarEstado();
