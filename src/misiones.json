@@ -1,0 +1,93 @@
+{
+    "niveles": {
+      "1": {
+        "misiones": [
+          {
+            "id": "alimentar_5",
+            "descripcion": "Alimenta a tu mascota 5 veces",
+            "progreso": 0,
+            "meta": 5,
+            "completado": false,
+            "recompensa": "Comida: Galleta"
+          },
+          {
+            "id": "jugar_3",
+            "descripcion": "Juega con tu mascota 3 veces",
+            "progreso": 0,
+            "meta": 3,
+            "completado": false
+          },
+          {
+            "id": "duchar_2",
+            "descripcion": "Ducha a tu mascota 2 veces",
+            "progreso": 0,
+            "meta": 2,
+            "completado": false
+          }
+        ],
+        "recompensas": {
+          "nivel": 2,
+          "desbloqueos": ["Cosméticos básicos", "Comida: Manzana", "Juego: Pelota"]
+        }
+      },
+      "2": {
+        "misiones": [
+          {
+            "id": "alimentar_10",
+            "descripcion": "Alimenta a tu mascota 10 veces",
+            "progreso": 0,
+            "meta": 10,
+            "completado": false
+          },
+          {
+            "id": "jugar_7",
+            "descripcion": "Juega con tu mascota 7 veces",
+            "progreso": 0,
+            "meta": 7,
+            "completado": false
+          },
+          {
+            "id": "descansar_3",
+            "descripcion": "Haz que tu mascota descanse 3 veces",
+            "progreso": 0,
+            "meta": 3,
+            "completado": false
+          }
+        ],
+        "recompensas": {
+          "nivel": 3,
+          "desbloqueos": ["Cosméticos avanzados", "Comida: Pescado", "Juego: Cuerda"]
+        }
+      },
+      "3": {
+        "misiones": [
+          {
+            "id": "alimentar_15",
+            "descripcion": "Alimenta a tu mascota 15 veces",
+            "progreso": 0,
+            "meta": 15,
+            "completado": false
+          },
+          {
+            "id": "jugar_10",
+            "descripcion": "Juega con tu mascota 10 veces",
+            "progreso": 0,
+            "meta": 10,
+            "completado": false
+          },
+          {
+            "id": "higiene_5",
+            "descripcion": "Mantén a tu mascota limpia 5 veces",
+            "progreso": 0,
+            "meta": 5,
+            "completado": false
+          }
+        ],
+        "recompensas": {
+          "nivel": 4,
+          "desbloqueos": ["Cosméticos premium", "Comida: Carne", "Juego: Rompecabezas"]
+        }
+      }
+    }
+  }
+  

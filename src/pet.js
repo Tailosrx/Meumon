@@ -1,178 +1,135 @@
+import { actualizarStats } from './utils.js';
+
 export default class Pet {
-  constructor(nombre, achievements) {
-      this.nombre = nombre;
-      this.energia = 50;
-      this.felicidad = 50;
-      this.higiene = 50;
-      this.estado = "activo";
-      this.exp = 0;
-      this.lvl = 1;
-      this.juegos = 0;
-      this.alimentos = 0;
-      this.tiempoHigiene = 0;
-      this.monedas = 0;
-      this.achievements = achievements;
-      this.actualizarEstado();
-      this.iniciarTemporizadores();
-  }
+    constructor() {
+        this.energia = 50;
+        this.felicidad = 50;
+        this.higiene = 50;
+        this.nivel = 1;
+        this.monedas = 0;
+        this.misiones = {};
+        this.estado = "activo";
+        this.cooldownAlimentar = false;
+        this.cooldownJugar = false;
+        this.cooldownLimpiar = false; 
 
-  alimentar() {
-      this.energia += 10;
-      this.felicidad += 5;
-      this.alimentos += 1;
-      if (this.energia > 100) this.energia = 100;
-      if (this.felicidad > 100) this.felicidad = 100;
-      this.ganarExp(10);
-      this.actualizarEstado();
-      this.verificarLogros();
-      this.guardarEstado();
-  }
+        setInterval(() => this.reducirStats(), 3000); // Reducir los stats cada 3 segundos
+    }
 
-  jugar() {
-      this.energia -= 10;
-      this.felicidad += 5;
-      if (this.energia < 0) this.energia = 0;
-      if (this.felicidad > 100) this.felicidad = 100;
-      this.juegos += 1;
-      this.actualizarEstado();
-      this.ganarExp(15);
-      this.verificarLogros();
-      this.guardarEstado();
-  }
+    static cargarEstado(misiones) {
+        // Cargar el estado de la mascota desde el almacenamiento local o inicializarlo
+        const mascota = new Pet();
+        mascota.misiones = misiones.niveles;
+        return mascota;
+    }
 
-  bañar() {
-      this.higiene = 100;
-      this.actualizarImagen("../assets/images/pet_ducha.png");
-      setTimeout(() => {
-          this.actualizarImagen("../assets/images/pixels.png");
-      }, 2000);
-      this.ganarExp(5);
-      this.actualizarEstado();
-      this.verificarLogros();
-      this.guardarEstado();
-  }
+    alimentar() {
 
-  descansar() {
-      if (this.estado !== "durmiendo") {
-          this.estado = "durmiendo";
-          this.energia = 100;
-          this.pararTemporizadores();
-          this.actualizarImagen("../assets/images/pet_sleep.png");
-          document.getElementById("descansar").innerText = "Despertar";
-          this.guardarEstado();
-      }
-  }
+        this.energia = Math.min(this.energia + 10, 100);
+        this.felicidad = Math.min(this.felicidad + 5, 100);
+        this.actualizarProgreso("alimentar");
+        this.guardarEstado();
+        actualizarStats(this); // Actualizar los stats en el DOM
 
-  despertar() {
-      if (this.estado === "durmiendo") {
-          this.estado = "activo";
-          this.iniciarTemporizadores();
-          this.actualizarImagen("../assets/images/pixels.png");
-          this.actualizarEstado();
-          document.getElementById("descansar").innerText = "Descansar";
-          this.guardarEstado();
-      }
-  }
+        this.cooldownAlimentar = true;
+        const button = document.getElementById("alimentar");
+        button.disabled = true;
+        button.textContent = "Espera...";
 
-  actualizarEstado() {
-      const energiaElem = document.getElementById("energia");
-      const felicidadElem = document.getElementById("felicidad");
-      const higieneElem = document.getElementById("higiene");
-      const nivelElem = document.getElementById("nivel");
-      const expElem = document.getElementById("exp");
+    setTimeout(() => {
+        this.cooldownAlimentar = false;
+        button.disabled = false;
+        button.textContent = "🍎 Alimentar";
+    }, 3000); // Cooldown de 3 segundos
+    }
 
-      if (energiaElem) energiaElem.innerText = `Energía: ${this.energia}`;
-      if (felicidadElem) felicidadElem.innerText = `Felicidad: ${this.felicidad}`;
-      if (higieneElem) higieneElem.innerText = `Higiene: ${this.higiene}`;
-      if (nivelElem) nivelElem.innerText = `Nivel: ${this.lvl}`;
-      if (expElem) expElem.innerText = `EXP: ${this.exp} / 100`;
-  }
+    jugar() {
+        this.energia = Math.max(this.energia - 10, 0);
+        this.felicidad = Math.min(this.felicidad + 10, 100);
+        this.actualizarProgreso("jugar");
+        this.guardarEstado();
+        actualizarStats(this); // Actualizar los stats en el DOM
 
-  actualizarImagen(ruta) {
-      const mascotaElem = document.getElementById("mascota");
-      if (mascotaElem) mascotaElem.src = ruta;
-  }
+        this.cooldownJugar = true;
+        const button = document.getElementById("jugar");
+        button.disabled = true;
+        button.textContent = "Espera...";
 
-  ganarExp(cantidad) {
-      this.exp += cantidad;
-      if (this.exp >= 100) {
-          this.lvl++;
-          this.exp = 0;
-      }
-      this.actualizarEstado();
-      this.verificarLogros();
-      this.guardarEstado();
-  }
+        setTimeout(() => {
+            this.cooldownJugar = false;
+            button.disabled = false;
+            button.textContent = "🎾 Jugar";
+        }, 3000); // Cooldown de 3 segundos
+    }
 
-  verificarLogros() {
-      this.achievements.forEach(achievement => {
-          const condition = new Function('pet', `return ${achievement.condition}`);
-          if (!achievement.unlocked && condition(this)) {
-              achievement.unlocked = true;
-              this.notificarLogro(achievement);
-          }
-      });
-      this.guardarEstado();
-  }
+    limpiar() {
+        this.higiene = 100;
+        this.actualizarProgreso("duchar");
+        this.guardarEstado();
+        actualizarStats(this); // Actualizar los stats en el DOM
 
-  notificarLogro(achievement) {
-      alert(`¡Logro desbloqueado! ${achievement.name}: ${achievement.description}`);
-  }
+        this.cooldownLimpiar = true;
+        const button = document.getElementById("duchar");
+        button.disabled = true;
+        button.textContent = "Espera...";
 
-  iniciarTemporizadores() {
-      this.temporizadorEnergia = setInterval(() => {
-          if (this.estado !== "durmiendo") {
-              this.energia -= 1;
-          }
-          if (this.energia < 0) this.energia = 0;
-          this.actualizarEstado();
-          this.guardarEstado();
-      }, 5000);
+        setTimeout(() => {
+            this.cooldownLimpiar = false;
+            button.disabled = false;
+            button.textContent = "🛁 Bañar";
+        }, 3000); // Cooldown de 3 segundos
+    }
 
-      this.temporizadorFelicidad = setInterval(() => {
-          if (this.estado !== "durmiendo") {
-              this.felicidad -= 1;
-          }
-          if (this.felicidad < 0) this.felicidad = 0;
-          this.actualizarEstado();
-          this.guardarEstado();
-      }, 7000);
+    descansar() {
+        if (this.estado !== "durmiendo") {
+            this.estado = "durmiendo";
+            this.energia = 100;
+            this.actualizarProgreso("descansar");
+            this.guardarEstado();
+            actualizarStats(this); // Actualizar los stats en el DOM
+        }
+    }
 
-      this.temporizadorHigiene = setInterval(() => {
-          if (this.estado !== "durmiendo") {
-              this.higiene -= 1;
-              if (this.higiene === 100) {
-                  this.tiempoHigiene += 1000;
-              } else {
-                  this.tiempoHigiene = 0;
-              }
-          }
-          if (this.higiene < 0) this.higiene = 0;
-          this.actualizarEstado();
-          this.guardarEstado();
-      }, 10000);
-  }
+    despertar() {
+        if (this.estado === "durmiendo") {
+            this.estado = "activo";
+            this.guardarEstado();
+            actualizarStats(this); // Actualizar los stats en el DOM
+        }
+    }
 
-  pararTemporizadores() {
-      clearInterval(this.temporizadorEnergia);
-      clearInterval(this.temporizadorFelicidad);
-      clearInterval(this.temporizadorHigiene);
-  }
+    reducirStats() {
+        this.energia = Math.max(this.energia - Math.floor(Math.random() * 4), 0);
+        this.felicidad = Math.max(this.felicidad - Math.floor(Math.random() * 4), 0);
+        this.higiene = Math.max(this.higiene - Math.floor(Math.random() * 4), 0);
+        this.guardarEstado();
+        actualizarStats(this); // Actualizar los stats en el DOM
+    }
 
-  guardarEstado() {
-      localStorage.setItem('mascota', JSON.stringify(this));
-  }
+    actualizarProgreso(accion) {
+        const nivelActual = this.misiones[this.nivel];
+        if (nivelActual) {
+            nivelActual.misiones.forEach(mision => {
+                if (mision.id.startsWith(accion) && !mision.completado) {
+                    mision.progreso += 1;
+                    if (mision.progreso >= mision.meta) {
+                        mision.completado = true;
+                        this.verificarNivel();
+                    }
+                }
+            });
+        }
+    }
 
-  static cargarEstado(achievements) {
-      const estado = localStorage.getItem('mascota');
-      if (estado) {
-          const datos = JSON.parse(estado);
-          const mascota = new Pet(datos.nombre, achievements);
-          Object.assign(mascota, datos);
-          return mascota;
-      }
-      return new Pet("Mascota", achievements);
-  }
+    verificarNivel() {
+        const nivelActual = this.misiones[this.nivel];
+        if (nivelActual && nivelActual.misiones.every(mision => mision.completado)) {
+            this.nivel = nivelActual.recompensas.nivel;
+        }
+    }
 
-
+    guardarEstado() {
+        // Guardar el estado de la mascota en el almacenamiento local
+        localStorage.setItem('mascota', JSON.stringify(this));
+    }
 }

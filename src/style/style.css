@@ -7,69 +7,53 @@ body {
     text-align: center;
     background: linear-gradient(135deg, #ffdde1, #ee9ca7);
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: center;
     height: 100vh;
 }
 
 h1 {
-    color: #fff;
-    font-size: 2rem;
+    color: #71799e;
+    font-size: 2.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
 }
 
 /* Contenedor del Tamagotchi */
 #game-container {
     background: #fff;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 400px;
+    max-width: 450px;
     width: 90%;
+    margin: 20px;
 }
 
 #icon-logo {
-    width: 100px;
+    width: 80px;
     position: relative;
     left: 40%;
     cursor: pointer;
-    transition: 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
 }
 
-#icon.logo.animate {
-    animation: shake 0.5s;
-    animation-iteration-count: 3;
+#icon-logo:hover {
+    transform: scale(1.1);
 }
-
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-
 
 #mascota {
     width: 180px;
     transition: transform 0.3s ease-in-out;
 }
 
-
-#mascota:active {
+#mascota:hover {
     transform: scale(1.1);
 }
-
 
 button {
     background: #ff6b81;
@@ -108,18 +92,17 @@ button:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.coins, #stats {
+    margin-bottom: 20px;
+}
 
-#achievements-container {
-    background: #fff;
+#misiones-container {
+    flex: 0 0 300px;
     padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 400px;
-    width: 90%;
-    position: relative;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+    height: 100vh;
 }
 
 .progress-bar {
@@ -145,7 +128,6 @@ li {
     margin: 10px 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
-    list-style: none;
 }
 
 #logros li:hover {
@@ -169,4 +151,10 @@ li {
 
 .finalizar:hover {
     background: #45a049;
+}
+
+.blurred {
+    filter: blur(5px);
+    pointer-events: none;
+    opacity: 0.5;
 }

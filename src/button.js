@@ -1,19 +1,20 @@
 import Pet from './pet.js';
-export { actualizarMonedas };
+import { actualizarStats, actualizarMonedas } from './utils.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch('achievements.json'); 
+        const response = await fetch('./misiones.json'); // Asegúrate de que la ruta sea correcta
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const achievements = await response.json();
+        const misiones = await response.json();
 
-        const mascota = Pet.cargarEstado(achievements);
+        const mascota = Pet.cargarEstado(misiones);
 
         actualizarStats(mascota);
-        actualizarMonedas(mascota); 
-        document.getElementById("alimentar")?.addEventListener("click", () => {
+        actualizarMonedas(mascota); // Asegurarse de que las monedas se actualicen al cargar la página
+
+        document.getElementById("alimentar")?.addEventListener("click", (event) => {
             mascota.alimentar();
             actualizarStats(mascota);
         });
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         document.getElementById("duchar")?.addEventListener("click", () => {
-            mascota.bañar();
+            mascota.limpiar();
             actualizarStats(mascota);
         });
 
@@ -38,9 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         document.getElementById("icon-logo")?.addEventListener("click", () => {
-            document.getElementById("game-container").style.display = "none";
-            document.getElementById("achievements-container").style.display = "block";
-            setTimeout(() => window.location.href = 'logros.html', 0);
+            alert("Construyendo la funcionalidad... Porfavor espere");
         });
 
         document.getElementById("volver")?.addEventListener("click", () => {
@@ -51,22 +50,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error('Error fetching achievements:', error);
     }
 });
-
-function actualizarStats(mascota) {
-    const energiaElem = document.getElementById("energia");
-    const felicidadElem = document.getElementById("felicidad");
-    const higieneElem = document.getElementById("higiene");
-    const nivelElem = document.getElementById("nivel");
-    const expElem = document.getElementById("exp");
-
-    if (energiaElem) energiaElem.textContent = mascota.energia;
-    if (felicidadElem) felicidadElem.textContent = mascota.felicidad;
-    if (higieneElem) higieneElem.textContent = mascota.higiene;
-    if (nivelElem) nivelElem.textContent = mascota.nivel;
-    if (expElem) expElem.textContent = mascota.exp;
-}
-
-function actualizarMonedas(mascota) {
-    const monedasElem = document.getElementById("monedas");
-    monedasElem.textContent = `Monedas: ${mascota.monedas}`;
-}

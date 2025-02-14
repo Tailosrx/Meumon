@@ -7,27 +7,32 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <h1>Tu Mascota</h1>
+    <section id="misiones-container">
+        <h2>Misiones</h2>
+        <ul id="logros"></ul>
+    </section>
+
     <div id="game-container">
+        <h1>Tu Mascota</h1>
         <div class="coins">
             <span class="stat">💰 <span id="monedas"></span></span> 
         </div>
-        <img id="icon-logo" onclick="location.href='misiones/logros.html'" src="../assets/images/logo.png" alt="Seccion de Logros">
-        <img id="mascota" src="../assets/images/pixels.png" alt="Tamagotchi" width="200">
+        <img id="icon-logo" src="../assets/images/logo.png" alt="Seccion de Logros" title="Ir a la sección de logros">
+        <img id="mascota" src="../assets/images/pixels.png" alt="Tamagotchi" width="200" title="Tu mascota virtual">
         <div id="stats">
-            <span class="stat">💤 <span id="energia"></span></span>
-            <span class="stat">😊 <span id="felicidad"></span></span>
-            <span class="stat">🛁 <span id="higiene"></span></span>
-            <span class="stat">🏆 <span id="nivel"></span></span>
-            <span class="stat">⭐ <span id="exp"></span></span>
+            <span class="stat" title="Energía">💤 <span id="energia"></span></span>
+            <span class="stat" title="Felicidad">😊 <span id="felicidad"></span></span>
+            <span class="stat" title="Higiene">🛁 <span id="higiene"></span></span>
+            <span class="stat" title="Nivel">🏆 <span id="nivel"></span></span>
         </div>
         
-        <button id="alimentar">🍎 Alimentar</button>
-        <button id="jugar">🎾 Jugar</button>
-        <button id="duchar">🛁 Bañar</button>
-        <button id="descansar">😴 Descansar</button>
+        <button id="alimentar" title="Alimentar a tu mascota">🍎 Alimentar</button>
+        <button id="jugar" title="Jugar con tu mascota">🎾 Jugar</button>
+        <button id="duchar" title="Bañar a tu mascota">🛁 Limpiar</button>
+        <button id="descansar" title="Descansar con tu mascota">😴 Descansar</button>
     </div>
     
     <script type="module" src="button.js"></script>
+    <script type="module" src="logros.js"></script>
 </body>
 </html>
