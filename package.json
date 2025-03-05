@@ -2,7 +2,7 @@
   "name": "Meumon",
   "version": "1.0.0",
   "description": "Mi aplicación de mascota en Electron",
-  "main": "main.js", 
+  "main": "main.js",
   "build": {
     "publish": [
       {
@@ -18,11 +18,13 @@
   },
   "devDependencies": {
     "electron": "^25.0.0",
+    "electron-builder": "^25.1.8",
     "electron-packager": "^15.0.0",
     "jest": "^29.7.0",
     "puppeteer": "^24.2.0"
   },
   "dependencies": {
+    "electron-log": "^5.3.0",
     "electron-updater": "^6.3.9"
   }
 }

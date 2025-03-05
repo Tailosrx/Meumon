@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const misiones = await response.json();
 
         const mascota = Pet.cargarEstado(misiones);
+        mascota.misiones = misiones;
 
         actualizarStats(mascota);
         actualizarMonedas(mascota); // Asegurarse de que las monedas se actualicen al cargar la página
@@ -37,6 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             actualizarStats(mascota);
         });
+
+        
 
         document.getElementById("icon-logo")?.addEventListener("click", () => {
             alert("Construyendo la funcionalidad... Porfavor espere");

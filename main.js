@@ -1,6 +1,10 @@
-const { app, BrowserWindow, screen } = require('electron');
+const { app, BrowserWindow, screen, ipcMain } = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater'); // Importar autoUpdater
+const log = require('electron-log');
+
+log.transports.file.level = 'info';
+autoUpdater.logger = log;
 
 let mainWindow;
 
@@ -50,4 +54,23 @@ app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }
+});
+
+// Eventos de autoUpdater
+autoUpdater.on('update-available', () => {
+    log.info('Update available.');
+    mainWindow.webContents.send('update_available');
+});
+
+autoUpdater.on('update-downloaded', () => {
+    log.info('Update downloaded.');
+    mainWindow.webContents.send('update_downloaded');
+});
+
+autoUpdater.on('error', (error) => {
+    log.error('Error in auto-updater:', error);
+});
+
+ipcMain.on('restart_app', () => {
+    autoUpdater.quitAndInstall();
 });

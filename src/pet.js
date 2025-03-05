@@ -1,13 +1,15 @@
 import { actualizarStats } from './utils.js';
+import { actualizarMisiones} from './logros.js';
 
 export default class Pet {
     constructor() {
-        this.energia = 50;
-        this.felicidad = 50;
-        this.higiene = 50;
+        this.energia = 10;
+        this.felicidad = 0;
+        this.higiene = 0;
         this.nivel = 1;
         this.monedas = 0;
         this.misiones = {};
+        this.inventario = [];
         this.estado = "activo";
         this.cooldownAlimentar = false;
         this.cooldownJugar = false;
@@ -17,19 +19,30 @@ export default class Pet {
     }
 
     static cargarEstado(misiones) {
-        // Cargar el estado de la mascota desde el almacenamiento local o inicializarlo
         const mascota = new Pet();
         mascota.misiones = misiones.niveles;
+        const estadoGuardado = JSON.parse(localStorage.getItem('mascota'));
+        if (estadoGuardado) {
+            Object.assign(mascota, estadoGuardado);
+        }
+        mascota.misiones = misiones; // Asignar las misiones directamente
         return mascota;
     }
-
+    
+    static guardarEstado(mascota, misiones) {
+        // Guardar el estado de la mascota en el almacenamiento local
+        localStorage.setItem('mascota', JSON.stringify(mascota));
+        localStorage.setItem('misiones', JSON.stringify(misiones));
+    }
+    
     alimentar() {
 
         this.energia = Math.min(this.energia + 10, 100);
         this.felicidad = Math.min(this.felicidad + 5, 100);
         this.actualizarProgreso("alimentar");
-        this.guardarEstado();
-        actualizarStats(this); // Actualizar los stats en el DOM
+        Pet.guardarEstado(this.misiones);
+        actualizarStats(this); 
+        actualizarMisiones(this, this.misiones); 
 
         this.cooldownAlimentar = true;
         const button = document.getElementById("alimentar");
@@ -47,8 +60,9 @@ export default class Pet {
         this.energia = Math.max(this.energia - 10, 0);
         this.felicidad = Math.min(this.felicidad + 10, 100);
         this.actualizarProgreso("jugar");
-        this.guardarEstado();
+        Pet.guardarEstado(this.misiones);
         actualizarStats(this); // Actualizar los stats en el DOM
+        actualizarMisiones(this, this.misiones);
 
         this.cooldownJugar = true;
         const button = document.getElementById("jugar");
@@ -65,8 +79,9 @@ export default class Pet {
     limpiar() {
         this.higiene = 100;
         this.actualizarProgreso("duchar");
-        this.guardarEstado();
+        Pet.guardarEstado(this.misiones);
         actualizarStats(this); // Actualizar los stats en el DOM
+        actualizarMisiones(this, this.misiones);
 
         this.cooldownLimpiar = true;
         const button = document.getElementById("duchar");
@@ -85,15 +100,16 @@ export default class Pet {
             this.estado = "durmiendo";
             this.energia = 100;
             this.actualizarProgreso("descansar");
-            this.guardarEstado();
+            Pet.guardarEstado(this, this.misiones);
             actualizarStats(this); // Actualizar los stats en el DOM
+            actualizarMisiones(this, this.misiones);
         }
     }
 
     despertar() {
         if (this.estado === "durmiendo") {
             this.estado = "activo";
-            this.guardarEstado();
+            Pet.guardarEstado(this.misiones);
             actualizarStats(this); // Actualizar los stats en el DOM
         }
     }
@@ -102,15 +118,15 @@ export default class Pet {
         this.energia = Math.max(this.energia - Math.floor(Math.random() * 4), 0);
         this.felicidad = Math.max(this.felicidad - Math.floor(Math.random() * 4), 0);
         this.higiene = Math.max(this.higiene - Math.floor(Math.random() * 4), 0);
-        this.guardarEstado();
+        Pet.guardarEstado(this.misiones);
         actualizarStats(this); // Actualizar los stats en el DOM
     }
 
     actualizarProgreso(accion) {
-        const nivelActual = this.misiones[this.nivel];
+        const nivelActual = this.misiones.find(nivel => nivel.nivel === this.nivel);
         if (nivelActual) {
             nivelActual.misiones.forEach(mision => {
-                if (mision.id.startsWith(accion) && !mision.completado) {
+                if (mision.id.startsWith(accion)) {
                     mision.progreso += 1;
                     if (mision.progreso >= mision.meta) {
                         mision.completado = true;
@@ -122,14 +138,15 @@ export default class Pet {
     }
 
     verificarNivel() {
-        const nivelActual = this.misiones[this.nivel];
+        const nivelActual = this.misiones.find(nivel => nivel.nivel === this.nivel);
         if (nivelActual && nivelActual.misiones.every(mision => mision.completado)) {
             this.nivel = nivelActual.recompensas.nivel;
         }
     }
 
-    guardarEstado() {
-        // Guardar el estado de la mascota en el almacenamiento local
-        localStorage.setItem('mascota', JSON.stringify(this));
+    agregarRecompensa(recompensa) {
+        this.inventario.push(recompensa);
+        Pet.guardarEstado(this.misiones);
     }
+
 }
