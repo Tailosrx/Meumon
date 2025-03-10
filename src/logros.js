@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     actualizarMisiones(mascota, mascota.misiones);
     actualizarMonedas(mascota);
-
+    let coins = document.getElementById("monedas");
   
     document.getElementById("logros").addEventListener("click", (event) => {
       if (event.target.classList.contains("finalizar")) {
@@ -40,6 +40,10 @@ export function actualizarMisiones(mascota, misiones) {
     nivelElem.innerHTML = `<h2>Nivel ${nivel.nivel}</h2>`;
 
     nivel.misiones.forEach(mision => {
+      if (mision.progreso > mision.meta) {
+        mision.progreso = mision.meta;
+      }
+
       let progresoPorcentaje = (mision.progreso / mision.meta) * 100;
       const misionElem = document.createElement("div");
       misionElem.className = `mision ${mision.completado ? "completed" : ""} ${nivelIndex + 1 > mascota.nivel ? "blurred" : ""}`;
@@ -56,8 +60,11 @@ export function actualizarMisiones(mascota, misiones) {
           ""
         }
       `;
-      
-      
+
+      if (mision.completado) {
+        misionElem.classList.add("mission-completed");
+        
+      }
 
       nivelElem.appendChild(misionElem);
     });
@@ -67,26 +74,41 @@ export function actualizarMisiones(mascota, misiones) {
 }
 
 function completarMision(id, mascota, button, misiones) {
+  console.log("Completando misión", id);
+  
   for (const nivel of misiones) {
     const mision = nivel.misiones.find(m => m.id === id);
-    if (mision && mision.completado) {
-      // Otorgar recompensa
-      if (mision.recompensa.includes("10 Monedas")) {
-        const cantidad = parseInt(mision.recompensa.match(/\d+/)[0]);
-        mascota.monedas += cantidad;
-        actualizarMonedas(mascota);
-      } else {
-        mascota.agregarRecompensa(mision.recompensa);
-      }
-      
-      // Marcar misión como completada y actualizar misiones
-      mision.completado = true;
-      actualizarMisiones(mascota, misiones);
-      
-      // Eliminar botón y guardar estado
-      button.remove();
-      Pet.guardarEstado(mascota, misiones);
-      break;
+    if (!mision || mision.completado) return; // Evita duplicaciones
+    
+    // Agregar recompensa a la mascota
+    if (mision.recompensa == 10) {
+      mascota.monedas += mision.recompensa;
+      actualizarMonedas(mascota);
+    } else {
+      mascota.agregarRecompensa(mision.recompensa);
+      añadirRecompensaAlInventario(mision.recompensa);
     }
+
+    // Marcar misión como completada
+    mision.completado = true;
+
+    // Deshabilitar y cambiar el botón en lugar de eliminarlo directamente
+    button.textContent = "Reclamado";
+    button.disabled = true;
+    button.classList.add("disabled");
+
+    // Guardar cambios
+    Pet.guardarEstado(mascota, misiones);
+    break;
   }
 }
+
+function añadirRecompensaAlInventario(recompensa) {
+  if (recompensa == 10) return; // No añadir monedas al inventario
+
+  const inventoryGrid = document.getElementById("inventory-grid");
+  const itemDiv = document.createElement("div");
+  itemDiv.textContent = recompensa;
+  inventoryGrid.appendChild(itemDiv);
+}
+

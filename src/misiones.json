@@ -2,8 +2,8 @@
   {
     "nivel": 1,
     "misiones": [
-      { "id": "alimentar_5", "descripcion": "Alimenta a tu mascota 5 veces", "meta": 5, "progreso": 0, "completado": false, "recompensa": "5 Monedas" },
-      { "id": "jugar_3", "descripcion": "Juega con tu mascota 3 veces", "meta": 3, "progreso": 0, "completado": false, "recompensa": "10 Monedas" },
+      { "id": "alimentar_5", "descripcion": "Alimenta a tu mascota 5 veces", "meta": 5, "progreso": 0, "completado": false, "recompensa": 10 },
+      { "id": "jugar_3", "descripcion": "Juega con tu mascota 3 veces", "meta": 3, "progreso": 0, "completado": false, "recompensa": 10 },
       { "id": "duchar_2", "descripcion": "Ducha a tu mascota 2 veces", "meta": 2, "progreso": 0, "completado": false, "recompensa": "Sombrero del Mago" }
     ],
     "recompensas": { "nivel": 2, "desbloqueos": ["Comida: Manzana", "Juego: Pelota"] }

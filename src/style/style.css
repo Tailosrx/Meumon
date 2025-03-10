@@ -20,7 +20,10 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Contenedor del Tamagotchi */
+.hidden {
+    display: none;
+}
+
 #game-container {
     background: #fff;
     padding: 30px;
@@ -34,7 +37,7 @@ h1 {
     margin: 20px;
 }
 
-#icon-logo {
+#icon-logo, #icon-shop {
     width: 80px;
     position: relative;
     left: 40%;
@@ -42,8 +45,44 @@ h1 {
     transition: transform 0.3s ease-in-out;
 }
 
-#icon-logo:hover {
+#icon-shop {
+    width: 40px;
+}
+
+#icon-logo:hover, #icon-shop:hover {
     transform: scale(1.1);
+}
+
+#inventory-container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2e2e2e;
+    border: 2px solid #000;
+    padding: 20px;
+    z-index: 1000;
+    width: 400px;
+    height: 400px;
+    overflow-y: auto;
+}
+
+#inventory-container h2{
+    color: #c3e6cb;
+}
+
+#inventory-grid div {
+    width: 80px;
+    height: 80px;
+    background-color: #444;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+
 }
 
 #mascota {
@@ -157,4 +196,10 @@ li {
     filter: blur(5px);
     pointer-events: none;
     opacity: 0.5;
+}
+
+.mission-completed {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
 }

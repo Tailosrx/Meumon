@@ -3,7 +3,7 @@ import { actualizarStats, actualizarMonedas } from './utils.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch('./misiones.json'); // Asegúrate de que la ruta sea correcta
+        const response = await fetch('./misiones.json'); 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -13,7 +13,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         mascota.misiones = misiones;
 
         actualizarStats(mascota);
-        actualizarMonedas(mascota); // Asegurarse de que las monedas se actualicen al cargar la página
+        actualizarMonedas(mascota);
+
+    const inventoryContainer = document.getElementById("inventory-container");
+    const iconShop = document.getElementById("icon-shop");
+
+    iconShop.addEventListener("click", () => {
+        inventoryContainer.classList.toggle("hidden");
+    });
+
+    const inventoryGrid = document.getElementById("inventory-grid");
+    const items = ["Manzana roja", "Pelota de Tenis", "Rosa"];
+
+    items.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.textContent = item;
+        inventoryGrid.appendChild(itemDiv);
+    });
 
         document.getElementById("alimentar")?.addEventListener("click", (event) => {
             mascota.alimentar();
@@ -49,6 +65,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("achievements-container").style.display = "none";
             document.getElementById("game-container").style.display = "block";
         });
+
+
     } catch (error) {
         console.error('Error fetching achievements:', error);
     }
