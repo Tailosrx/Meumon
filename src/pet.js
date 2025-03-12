@@ -1,5 +1,5 @@
 import { actualizarStats } from './utils.js';
-import { actualizarMisiones} from './logros.js';
+import { actualizarMisiones, mostrarSubidaDeNivel} from './logros.js';
 
 export default class Pet {
     constructor() {
@@ -141,6 +141,7 @@ export default class Pet {
         const nivelActual = this.misiones.find(nivel => nivel.nivel === this.nivel);
         if (nivelActual && nivelActual.misiones.every(mision => mision.completado)) {
             this.nivel = nivelActual.recompensas.nivel;
+            mostrarSubidaDeNivel(this.nivel, nivelActual.recompensas.desbloqueos);
         }
     }
 

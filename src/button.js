@@ -22,14 +22,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         inventoryContainer.classList.toggle("hidden");
     });
 
-    const inventoryGrid = document.getElementById("inventory-grid");
-    const items = ["Manzana roja", "Pelota de Tenis", "Rosa"];
-
-    items.forEach(item => {
-        const itemDiv = document.createElement("div");
-        itemDiv.textContent = item;
-        inventoryGrid.appendChild(itemDiv);
+    const close = document.getElementById("closeModal");
+    close.addEventListener("click", () => {
+        const modal = document.getElementById("nivelUpModal");
+        modal.classList.add("hidden");
+        modal.style.display = "none";
     });
+   
+
+
+    const inventoryGrid = document.getElementById("inventory-grid");
 
         document.getElementById("alimentar")?.addEventListener("click", (event) => {
             mascota.alimentar();

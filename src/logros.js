@@ -103,53 +103,67 @@ function completarMision(id, mascota, button, misiones) {
     break;
   }
 }
-
 function añadirRecompensaAlInventario(recompensa) {
-  if (recompensa == 10) return; // No añadir monedas al inventario
+  if (recompensa == 10) return; 
 
-  const inventoryContainer = document.getElementById("inventory-container");
   const inventoryGrid = document.getElementById("inventory-grid");
+  const itemInfo = document.getElementById("item-info"); // Elemento para mostrar info
 
   const itemDiv = document.createElement("div");
   itemDiv.textContent = recompensa;
+  
   itemDiv.className = "inventory-item"; 
 
+  itemDiv.style.color = "yellow";
+
   itemDiv.addEventListener("click", () => {
-    inventoryContainer.innerHTML = `
-      <h3>${recompensa}</h3>
+    itemInfo.innerHTML = `
+      <h3 style= "color: yellow">${recompensa}</h3>
       <p>${obtenerDescripcion(recompensa)}</p>
     `;
-    inventoryContainer.style.fontSize = "20px";
-    inventoryContainer.style.padding = "15px";
-    inventoryContainer.style.width = "300px";
-    inventoryContainer.style.height = "150px";
-    inventoryContainer.style.background = "rgba(0, 0, 0, 0.8)";
-    inventoryContainer.style.border = "2px solid gold";
-    inventoryContainer.style.borderRadius = "10px";
-    inventoryContainer.style.color = "white";
-    inventoryContainer.style.textAlign = "center";
+    itemInfo.style.width = "200px";
   });
 
   inventoryGrid.appendChild(itemDiv);
 }
 
-
-// Si eso poner mas adelante por lvl
-function obtenerDescripcion(item) {
+function obtenerDescripcion(recompensa) {
   const descripciones = {
-    "Manzana roja": "Recupera un poco de energía.",
-    "Pelota de Tenis": "Perfecta para jugar con tu mascota.",
-    "Rosa": "Un bonito regalo para alguien especial.",
+    "Manzana roja": "Una jugosa manzana roja.", // Es la comida por defecto (alimenta 10 de energía)
+    "Pelota de Tenis": "Una pelota de tenis amarilla.", // Juguete por defecto (aumenta fel 10)
+    "Jabon de Ducha": "Un jabon lleno de gel.", // Jabon para ducharse (aumenta limpieza 100)
   };
 
-  return descripciones[item] || "Un objeto misterioso...";
+  return descripciones[recompensa] || "Un objeto misterioso.";
 }
+
 
 // Pilla items iniciales desde button.js
 document.addEventListener("DOMContentLoaded", () => {
-  const items = ["Manzana roja", "Pelota de Tenis", "Rosa"];
+  const items = ["Manzana roja", "Pelota de Tenis", "Jabon de Ducha"];
   items.forEach(añadirRecompensaAlInventario);
 });
 
 
+export function mostrarSubidaDeNivel(nivel, desbloqueos) {
+  const modal = document.getElementById("nivelUpModal");
+  const nivelElem = document.getElementById("nuevoNivel");
+  const desbloqueosElem = document.getElementById("desbloqueos");
 
+  modal.classList.toggle("hidden");
+
+  nivelElem.textContent = `¡Has subido al nivel ${nivel}! 🎉`;
+ desbloqueosElem.innerHTML = desbloqueos.length > 0
+      ? desbloqueos.map(d => `<li>${d}</li>`).join("")
+      : "No hay desbloqueos en este nivel.";
+
+  modal.style.display = "block";
+}
+
+
+
+function cerrarModal(params) {
+  const modal = document.getElementById("nivelUpModal");
+  modal.classList.add("hidden");
+  modal.style.display = "none";
+}

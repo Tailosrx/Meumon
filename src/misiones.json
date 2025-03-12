@@ -6,7 +6,7 @@
       { "id": "jugar_3", "descripcion": "Juega con tu mascota 3 veces", "meta": 3, "progreso": 0, "completado": false, "recompensa": 10 },
       { "id": "duchar_2", "descripcion": "Ducha a tu mascota 2 veces", "meta": 2, "progreso": 0, "completado": false, "recompensa": "Sombrero del Mago" }
     ],
-    "recompensas": { "nivel": 2, "desbloqueos": ["Comida: Manzana", "Juego: Pelota"] }
+    "recompensas": { "nivel": 2, "desbloqueos": ["Manzana", "Pelota", "Sombrero de Mago"] }
   },
   {
     "nivel": 2,
