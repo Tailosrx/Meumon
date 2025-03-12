@@ -89,11 +89,19 @@ function completarMision(id, mascota, button, misiones) {
     }
     mision.completado = true;
 
+<<<<<<< Updated upstream
     // Hace un save en localStorage que esta misión fue reclamada
+=======
+    // Guardar en localStorage que esta misión fue reclamada
+>>>>>>> Stashed changes
     let misionesReclamadas = JSON.parse(localStorage.getItem("misionesReclamadas")) || [];
     misionesReclamadas.push(id);
     localStorage.setItem("misionesReclamadas", JSON.stringify(misionesReclamadas));
 
+<<<<<<< Updated upstream
+=======
+    // Deshabilitar y cambiar el botón
+>>>>>>> Stashed changes
     button.textContent = "Reclamado";
     button.disabled = true;
     button.classList.add("endMission");
@@ -103,6 +111,12 @@ function completarMision(id, mascota, button, misiones) {
     break;
   }
 }
+<<<<<<< Updated upstream
+=======
+
+
+
+>>>>>>> Stashed changes
 function añadirRecompensaAlInventario(recompensa) {
   if (recompensa == 10) return; 
 

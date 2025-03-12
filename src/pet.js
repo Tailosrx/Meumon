@@ -126,9 +126,9 @@ export default class Pet {
         const nivelActual = this.misiones.find(nivel => nivel.nivel === this.nivel);
         if (nivelActual) {
             nivelActual.misiones.forEach(mision => {
-                if (mision.id.startsWith(accion)) {
+                if (mision.id.startsWith(accion) && !mision.completado) {
                     mision.progreso += 1;
-                    if (mision.progreso >= mision.meta) {
+                    if (mision.progreso == mision.meta) {
                         mision.completado = true;
                         this.verificarNivel();
                     }
