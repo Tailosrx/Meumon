@@ -1,5 +1,6 @@
 import { actualizarStats } from './utils.js';
-import { actualizarMisiones, mostrarSubidaDeNivel} from './logros.js';
+import { actualizarMisiones, mostrarSubidaDeNivel } from './logros.js';
+import { iniciarJuegoMemoria } from './games/memory.js';
 
 export default class Pet {
     constructor() {
@@ -36,11 +37,10 @@ export default class Pet {
     }
     
     alimentar() {
-
         this.energia = Math.min(this.energia + 10, 100);
         this.felicidad = Math.min(this.felicidad + 5, 100);
         this.actualizarProgreso("alimentar");
-        Pet.guardarEstado(this.misiones);
+        Pet.guardarEstado(this, this.misiones);
         actualizarStats(this); 
         actualizarMisiones(this, this.misiones); 
 
@@ -49,14 +49,17 @@ export default class Pet {
         button.disabled = true;
         button.textContent = "Espera...";
 
-    setTimeout(() => {
-        this.cooldownAlimentar = false;
-        button.disabled = false;
-        button.textContent = "🍎 Alimentar";
-    }, 3000); // Cooldown de 3 segundos
+        setTimeout(() => {
+            this.cooldownAlimentar = false;
+            button.disabled = false;
+            button.textContent = "🍎 Alimentar";
+        }, 3000); // Cooldown de 3 segundos
     }
 
     jugar() {
+        // Redirigir al usuario al juego de memoria
+        iniciarJuegoMemoria(this);
+
         this.energia = Math.max(this.energia - 10, 0);
         this.felicidad = Math.min(this.felicidad + 10, 100);
         this.actualizarProgreso("jugar");
@@ -66,20 +69,19 @@ export default class Pet {
 
         this.cooldownJugar = true;
         const button = document.getElementById("jugar");
-        button.disabled = true;
-        button.textContent = "Espera...";
 
         setTimeout(() => {
             this.cooldownJugar = false;
             button.disabled = false;
             button.textContent = "🎾 Jugar";
         }, 3000); // Cooldown de 3 segundos
+
     }
 
     limpiar() {
         this.higiene = 100;
         this.actualizarProgreso("duchar");
-        Pet.guardarEstado(this.misiones);
+        Pet.guardarEstado(this, this.misiones);
         actualizarStats(this); // Actualizar los stats en el DOM
         actualizarMisiones(this, this.misiones);
 
@@ -109,7 +111,7 @@ export default class Pet {
     despertar() {
         if (this.estado === "durmiendo") {
             this.estado = "activo";
-            Pet.guardarEstado(this.misiones);
+            Pet.guardarEstado(this, this.misiones);
             actualizarStats(this); // Actualizar los stats en el DOM
         }
     }
@@ -118,7 +120,7 @@ export default class Pet {
         this.energia = Math.max(this.energia - Math.floor(Math.random() * 4), 0);
         this.felicidad = Math.max(this.felicidad - Math.floor(Math.random() * 4), 0);
         this.higiene = Math.max(this.higiene - Math.floor(Math.random() * 4), 0);
-        Pet.guardarEstado(this.misiones);
+        Pet.guardarEstado(this, this.misiones);
         actualizarStats(this); // Actualizar los stats en el DOM
     }
 
@@ -142,12 +144,24 @@ export default class Pet {
         if (nivelActual && nivelActual.misiones.every(mision => mision.completado)) {
             this.nivel = nivelActual.recompensas.nivel;
             mostrarSubidaDeNivel(this.nivel, nivelActual.recompensas.desbloqueos);
+            this.cambiarJuegoSegunNivel();
+        }
+    }
+
+    cambiarJuegoSegunNivel() {
+        if (this.nivel >= 3 && this.nivel < 6) {
+            iniciarJuegoMemoria(this);
+        } else if (this.nivel >= 6 && this.nivel < 9) {
+            // Lógica para iniciar el juego de atrapar la pelota
+        } else if (this.nivel >= 9 && this.nivel < 10) {
+            // Lógica para iniciar el juego de carrera de obstáculos
+        } else if (this.nivel >= 10) {
+            // Lógica para iniciar el juego de búsqueda del tesoro
         }
     }
 
     agregarRecompensa(recompensa) {
         this.inventario.push(recompensa);
-        Pet.guardarEstado(this.misiones);
+        Pet.guardarEstado(this, this.misiones);
     }
-
 }

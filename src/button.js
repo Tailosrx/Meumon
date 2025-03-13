@@ -28,10 +28,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         modal.classList.add("hidden");
         modal.style.display = "none";
     });
-   
-
-
-    const inventoryGrid = document.getElementById("inventory-grid");
 
         document.getElementById("alimentar")?.addEventListener("click", (event) => {
             mascota.alimentar();
