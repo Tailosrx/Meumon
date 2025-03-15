@@ -58,45 +58,103 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #2e2e2e;
-    border: 2px solid #000;
-    padding: 20px;
+    background-color: #00204a;
+    border: 2px solid #ddd;
+    padding: 10px;
     z-index: 1000;
-    width: 55%;
-    height: 52%;
+    width: 50%;
+    height: 70%;
     overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+#inventory-container.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#inventory-container.hide {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+}
 
 #item-info {
     font-size: 18pt;
     padding: 15px;
     width: 350px;
     height: 180px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
+    background: #005792;
+    color: #fdb44b;
     border: 2px solid gold;
     border-radius: 10px;
     text-align: center;
   }
 
-#inventory-container h2{
-    color: #c3e6cb;
+
+
+#inventory-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
 }
 
 #inventory-grid div {
+    background-color: #00bbf0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
     width: 80px;
     height: 80px;
-    background-color: #444;
-    border: 1px solid #000;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    font-size: 14pt;
-    text-align: center;
-
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+#inventory-grid div:hover {
+    background-color: #005792;
+}
+
+#close-inventory {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20pt;
+    color: #00204a;
+    transition: transform 0.3s ease-in-out;
+}
+
+#close-inventory:hover {
+    color: #fdb44b;
+}
+
+#item-selected {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#item-selected h3 {
+    font-size: 1.5em;
+    color: #fdb44b;
+}
+
+#item-selected img {
+    max-width: 100px;
+    margin: 10px 0;
+}
+
+#item-selected p {
+    font-size: 1em;
+    color: #fdb44b;
+}
+
 
 #mascota {
     width: 180px;

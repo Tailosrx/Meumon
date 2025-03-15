@@ -17,9 +17,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const inventoryContainer = document.getElementById("inventory-container");
     const iconShop = document.getElementById("icon-shop");
+    const closeInventory = document.getElementById("close-inventory");
 
     iconShop.addEventListener("click", () => {
         inventoryContainer.classList.toggle("hidden");
+        if (!inventoryContainer.classList.contains("hidden")) {
+            inventoryContainer.classList.add("show");
+            inventoryContainer.classList.remove("hide");
+        } else {
+            inventoryContainer.classList.add("hide");
+            setTimeout(() => {
+                inventoryContainer.classList.remove("show");
+            }, 300); // Tiempo de la transición
+        }
+    });
+
+    closeInventory.addEventListener("click", () => {
+        inventoryContainer.classList.add("hide");
+        setTimeout(() => {
+            inventoryContainer.classList.add("hidden");
+            inventoryContainer.classList.remove("show");
+            // Restablecer el contenido del contenedor item-selected
+            document.getElementById("item-name").textContent = "";
+            document.getElementById("item-image").src = "../assets/images/fondo.png";
+            document.getElementById("item-description").textContent = "";
+        }, 300); // Tiempo de la transición
     });
 
     const close = document.getElementById("closeModal");

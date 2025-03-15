@@ -71,8 +71,6 @@ export function actualizarMisiones(mascota, misiones) {
   });
 }
 
-
-
 function completarMision(id, mascota, button, misiones) {
   console.log("Completando misión", id);
   
@@ -103,6 +101,7 @@ function completarMision(id, mascota, button, misiones) {
     break;
   }
 }
+
 function añadirRecompensaAlInventario(recompensa) {
   if (recompensa == 10) return; 
 
@@ -117,11 +116,9 @@ function añadirRecompensaAlInventario(recompensa) {
   itemDiv.style.color = "yellow";
 
   itemDiv.addEventListener("click", () => {
-    itemInfo.innerHTML = `
-      <h3 style= "color: yellow">${recompensa}</h3>
-      <p>${obtenerDescripcion(recompensa)}</p>
-    `;
-    itemInfo.style.width = "200px";
+    document.getElementById("item-name").textContent = recompensa;
+    document.getElementById("item-image").src = `../assets/images/${recompensa.toLowerCase().replace(/ /g, "_")}.png`;
+    document.getElementById("item-description").textContent = obtenerDescripcion(recompensa);
   });
 
   inventoryGrid.appendChild(itemDiv);
@@ -137,13 +134,11 @@ function obtenerDescripcion(recompensa) {
   return descripciones[recompensa] || "Un objeto misterioso.";
 }
 
-
 // Pilla items iniciales desde button.js
 document.addEventListener("DOMContentLoaded", () => {
   const items = ["Manzana roja", "Pelota de Tenis", "Jabon de Ducha"];
   items.forEach(añadirRecompensaAlInventario);
 });
-
 
 export function mostrarSubidaDeNivel(nivel, desbloqueos) {
   const modal = document.getElementById("nivelUpModal");
@@ -159,8 +154,6 @@ export function mostrarSubidaDeNivel(nivel, desbloqueos) {
 
   modal.style.display = "block";
 }
-
-
 
 function cerrarModal(params) {
   const modal = document.getElementById("nivelUpModal");
