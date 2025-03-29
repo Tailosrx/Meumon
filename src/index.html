@@ -29,21 +29,22 @@
         
         <button id="alimentar" title="Alimentar a tu mascota">🍎 Alimentar</button>
         <button id="jugar" title="Jugar con tu mascota">🎾 Jugar</button>
-        <button id="duchar" title="Bañar a tu mascota">🛁 Limpiar</button>
-        <!--<button id="descansar" title="Descansar con tu mascota">😴 Descansar</button> -->
+        <button id="duchar" title="Bañar a tu mascota" >🛁 Limpiar</button>
+        <button id="descansar" title="Descansar con tu mascota" class="hidden">😴 Descansar</button> 
+        
     </div>
 
     <!--Inventario-->
     <div id="inventory-container" class="hidden">
         <button id="close-inventory" title="Cerrar Inventario">X</button>
-        <h2>Mi Inventario</h2>
+        <h2 id="title-inventory">Mi Inventario</h2>
         <div id="inventory-grid">
-            <!-- Elementos del inventario -->
         </div>
         <div id="item-selected">
             <h3 id="item-name"></h3>
             <img id="item-image" src="../assets/images/fondo.png" alt="Imagen del ítem">
             <p id="item-description"></p>
+            <button id="equip-button" class="hidden"></button>
         </div>
     </div>
 
@@ -55,6 +56,8 @@
             <ul id="desbloqueos"></ul>
             <button id="closeModal">Aceptar</button>
         </div>
+    </div>
+    <!---->
 
     
     <script type="module" src="button.js"></script>

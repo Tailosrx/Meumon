@@ -58,14 +58,15 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #00204a;
-    border: 2px solid #ddd;
-    padding: 10px;
+    background-color: #1e1e2f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 20px;
     z-index: 1000;
     width: 50%;
     height: 70%;
     overflow-y: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
@@ -142,7 +143,7 @@ h1 {
 
 #item-selected h3 {
     font-size: 1.5em;
-    color: #fdb44b;
+    color: #ffffff; 
 }
 
 #item-selected img {
@@ -152,7 +153,12 @@ h1 {
 
 #item-selected p {
     font-size: 1em;
-    color: #fdb44b;
+    color: #d1d1e9;
+}
+
+#title-inventory {
+    color:#fdb44b;
+    font-size: 1.8rem;
 }
 
 
