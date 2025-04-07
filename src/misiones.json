@@ -2,19 +2,79 @@
   {
     "nivel": 1,
     "misiones": [
-      { "id": "alimentar_5", "descripcion": "Alimenta a tu mascota 5 veces", "meta": 5, "progreso": 0, "completado": false, "recompensa": 10 },
-      { "id": "jugar_3", "descripcion": "Juega con tu mascota 3 veces", "meta": 3, "progreso": 0, "completado": false, "recompensa": 10 },
-      { "id": "duchar_2", "descripcion": "Ducha a tu mascota 2 veces", "meta": 2, "progreso": 0, "completado": false, "recompensa": "Sombrero del Mago" }
+      {
+        "id": "alimentar_5",
+        "titulo": "Alimenta a tu mascota I",
+        "descripcion": "Tu Mascota esta hambrienta, alimentala 5 veces",
+        "meta": 5,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": 10
+      },
+      {
+        "id": "jugar_3",
+        "titulo": "El juego de las Cartas",
+        "descripcion": "Le ha llegado a tu mascota unas cartas de un amigo, juega con ella 3 veces",
+        "meta": 3,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": 10
+      },
+      {
+        "id": "duchar_2",
+        "titulo": "Jabon y Agua",
+        "descripcion": "Tu mascota esta sucia, dale una ducha",
+        "meta": 2,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": "Sombrero del Mago"
+      }
     ],
-    "recompensas": { "nivel": 2, "desbloqueos": ["Manzana", "Pelota", "Sombrero de Mago"] }
+    "recompensas": {
+      "nivel": 2,
+      "desbloqueos": [
+        "Manzana",
+        "Pelota",
+        "Sombrero de Mago"
+      ]
+    }
   },
   {
     "nivel": 2,
     "misiones": [
-      { "id": "alimentar_10", "descripcion": "Alimenta a tu mascota 10 veces", "meta": 10, "progreso": 0, "completado": false, "recompensa": "15 Monedas" },
-      { "id": "jugar_7", "descripcion": "Juega con tu mascota 7 veces", "meta": 7, "progreso": 0, "completado": false, "recompensa": "20 Monedas" },
-      { "id": "descansar_3", "descripcion": "Haz que tu mascota descanse 3 veces", "meta": 3, "progreso": 0, "completado": false, "recompensa": "Cama de Lujo" }
+      {
+        "id": "alimentar_10",
+        "titulo": "Alimenta a tu mascota 10 veces",
+        "descripcion": "Tu mascota esta hambrienta, alimentala 10 veces",
+        "meta": 10,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": "15 Monedas"
+      },
+      {
+        "id": "equipar_sombrero",
+        "titulo": "El Sombrero del Mago",
+        "descripcion": "Tu mascota encontró un misterioso sombrero, le da curiosidad ponerselo",
+        "meta": 7,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": "20 Monedas"
+      },
+      {
+        "id": "descansar_3",
+        "titulo": "Haz que tu mascota descanse 3 veces",
+        "descripcion": "Tu mascota esta cansada, haz que descanse 3 veces",
+        "meta": 3,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": "Cama de Lujo"
+      }
     ],
-    "recompensas": { "nivel": 3, "desbloqueos": ["Cosméticos avanzados", "Comida: Pescado", "Juego: Cuerda"] }
+    "recompensas": {
+      "nivel": 3,
+      "desbloqueos": [
+        "Comida: Pescado"
+      ]
+    }
   }
 ]

@@ -4,6 +4,7 @@ const { autoUpdater } = require('electron-updater'); // Importar autoUpdater
 const log = require('electron-log');
 
 log.transports.file.level = 'info';
+log.transports.file.resolvePath = () => path.join(app.getPath('userData'), 'logs/main.log');
 autoUpdater.logger = log;
 
 let mainWindow;
@@ -18,7 +19,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
-        }
+        },
+        icon: path.join(__dirname, 'assets/images/pixels.png')
     };
 
     if (externalDisplay) {

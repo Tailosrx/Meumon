@@ -44,6 +44,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 300); // Tiempo de la transición
     });
 
+    let closeLogros = document.getElementById("close-logros");
+    closeLogros.addEventListener("click", () => {
+        document.getElementById("logros-container").classList.add("hidden");
+    });
+
     const close = document.getElementById("closeModal");
     close.addEventListener("click", () => {
         const modal = document.getElementById("nivelUpModal");
@@ -77,7 +82,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         
 
         document.getElementById("icon-logo")?.addEventListener("click", () => {
-            alert("Construyendo la funcionalidad... Porfavor espere");
+            /*const logrosContainer = document.getElementById("logros-container");
+            logrosContainer.classList.remove("hidden");*/
+
+            alert("En construccion, porfavor espere");
+
         });
 
         document.getElementById("volver")?.addEventListener("click", () => {

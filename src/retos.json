@@ -1,0 +1,48 @@
+[
+{
+    "reto": "Aficionado a las cartas",
+    "descripcion": "Completa 10 partidas en cualquier modo de juego.",
+    "progreso": 0,
+    "meta": 10,
+    "recompensa": {
+        "monedas": 50
+    }
+},
+{
+    "reto": "Profesional de las cartas",
+    "descripcion": "Completa 20 partidas en cualquier modo de juego.",
+    "progreso": 0,
+    "meta": 10,
+    "recompensa": {
+        "monedas": 80
+    }
+},
+{
+    "reto": "Bebe",
+    "descripcion": "Llega al nivel 5",
+    "progreso": 0,
+    "meta": 10,
+    "recompensa": {
+        "monedas": 40
+    }
+},
+{
+    "reto": "Joven",
+    "descripcion": "Llega al nivel 10",
+    "progreso": 0,
+    "meta": 10,
+    "recompensa": {
+        "monedas": 100
+    }
+},
+{
+    "reto": "Adolescente",
+    "descripcion": "Llega al nivel 15",
+    "progreso": 0,
+    "meta": 10,
+    "recompensa": {
+        "monedas": 150
+    }
+}
+
+]

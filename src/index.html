@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Mascota</title>
     <link rel="stylesheet" href="style/style.css">
+    <link rel="icon" href="../assets/images/pixels.png" type="image/x-icon">
 </head>
 <body>
     <section id="misiones-container">
-        <h2>Misiones</h2>
+        <h2 class="lvl-title">Misiones</h2>
         <ul id="logros"></ul>
     </section>
 
@@ -19,6 +20,7 @@
         </div>
         <img id="icon-logo" src="../assets/images/logo.png" alt="Seccion de Logros" title="Ir a la sección de logros">
         <img id="icon-shop" src="../assets/images/inventory.png" alt="Tienda" title="Ir a la tienda">
+        <!--<img id="icon-tutorial" src="../assets/images/tutorial.png" alt="Tutorial" title="Ver tutoriales">-->
         <img id="mascota" src="../assets/images/pixels.png" alt="Tamagotchi" width="200" title="Tu mascota virtual">
         <div id="stats">
             <span class="stat" title="Energía">💤 <span id="energia"></span></span>
@@ -47,8 +49,21 @@
             <button id="equip-button" class="hidden"></button>
         </div>
     </div>
+    <!---->
+    <!--Logros-->
+    <div id="logros-container" class="hidden">
+        <button id="close-logros" title="Cerrar Logros">X</button>
+        <h2 id="title-logros">Mis Logros</h2>
+        <div id="logros-grid">
+        </div>
+        <div id="logro-selected">
+            <h3 id="logro-name"></h3>
+            <img id="logro-image" src="../assets/images/fondo.png" alt="Imagen del logro">
+            <p id="logro-description"></p>
+        </div>
+    <!---->
 
-    <!--Modal-->
+    <!--Modal lvl-->
     <div id="nivelUpModal" class="hidden">
         <div id="modal-content">
             <h2 id="nuevoNivel"></h2>
@@ -59,9 +74,19 @@
     </div>
     <!---->
 
+    <!--Modal Tutorial-->
+    <div id="tutorial-modal" class="hidden">
+        <div class="modal-content">
+          <p id="tutorial-texto">¡Bienvenido a Meumon! </p>
+          <button id="tutorial-siguiente" onclick="siguienteMensajeTutorial()">Siguiente</button>
+        </div>
+      </div>
+    <!---->
+
     
     <script type="module" src="button.js"></script>
     <script type="module" src="logros.js"></script>
     <script type="module" src="games/memory.js"></script>
+   
 </body>
 </html>
