@@ -79,6 +79,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             actualizarStats(mascota);
         });
+
+
         
 
         document.getElementById("icon-logo")?.addEventListener("click", () => {

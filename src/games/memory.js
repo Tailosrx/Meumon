@@ -1,4 +1,5 @@
 import Pet from "../pet.js";
+import AudioController from "../audioController.js";
 
 export function iniciarJuegoMemoria(mascota, misiones) {
   // Ocultar el contenedor original
@@ -14,6 +15,8 @@ export function iniciarJuegoMemoria(mascota, misiones) {
             <!-- Cartas generadas aquí -->
         </div>
     `;
+
+
 
   // Insertar el nuevo contenedor en el DOM
   document.body.appendChild(newGameContainer);
@@ -114,6 +117,8 @@ export function iniciarJuegoMemoria(mascota, misiones) {
         console.error("Error: Las misiones no están definidas");
         return;
       }
+
+      AudioController.play("menu");
 
       mascota.actualizarProgreso("jugar");
       Pet.guardarEstado(mascota, misiones);

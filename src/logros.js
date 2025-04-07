@@ -1,5 +1,6 @@
 import { actualizarMonedas } from "./utils.js";
 import Pet from "./pet.js";
+import AudioController from "./audioController.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
@@ -11,6 +12,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     actualizarMisiones(mascota, mascota.misiones);
     actualizarMonedas(mascota);
     let coins = document.getElementById("monedas");
+
+    AudioController.play("menu");
+
+    document.getElementById("jugar").addEventListener("click", () => {
+      AudioController.play("gameCard");
+    });
 
     document.getElementById("logros").addEventListener("click", (event) => {
       if (
@@ -179,6 +186,11 @@ export function mostrarSubidaDeNivel(nivel, desbloqueos) {
 
   modal.classList.toggle("hidden");
   levelUpSound.play();
+
+
+  
+
+
 
   nivelElem.textContent = `¡Has subido al nivel ${nivel}! 🎉`;
   desbloqueosElem.innerHTML =
