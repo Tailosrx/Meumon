@@ -33,8 +33,7 @@
     "recompensas": {
       "nivel": 2,
       "desbloqueos": [
-        "Manzana",
-        "Pelota",
+        "Cama de Madera",
         "Sombrero de Mago"
       ]
     }
@@ -49,7 +48,7 @@
         "meta": 10,
         "progreso": 0,
         "completado": false,
-        "recompensa": "15 Monedas"
+        "recompensa": 20
       },
       {
         "id": "equipar_sombrero",
@@ -58,7 +57,7 @@
         "meta": 7,
         "progreso": 0,
         "completado": false,
-        "recompensa": "20 Monedas"
+        "recompensa": 15
       },
       {
         "id": "descansar_3",
@@ -67,13 +66,13 @@
         "meta": 3,
         "progreso": 0,
         "completado": false,
-        "recompensa": "Cama de Lujo"
+        "recompensa": 10
       }
     ],
     "recompensas": {
       "nivel": 3,
       "desbloqueos": [
-        "Comida: Pescado"
+        "Paleta Aquatico"
       ]
     }
   }
