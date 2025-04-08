@@ -12,6 +12,7 @@ Principalmente esto es un regalo que estoy desarrollando para mi pareja, pero se
 - Completa misiones para ganar recompensas.
 - Sube de nivel y desbloquea nuevas características.
 - Minijuegos diferentes cada 5 niveles
+> Hecho con HTML5, CSS3, JavaScript y ElectronJS
 
 ## Uso
 
