@@ -28,7 +28,7 @@ h1 {
 }
 
 
-.hidden {
+.hidden{
     display: none;
 }
 
@@ -146,22 +146,22 @@ h1 {
     color: #fdb44b;
 }
 
-#item-selected {
+#item-details {
     margin-top: 20px;
     text-align: center;
 }
 
-#item-selected h3 {
+#item-name {
     font-size: 1.5em;
     color: #ffffff; 
 }
 
-#item-selected img {
+#item-image {
     max-width: 100px;
     margin: 10px 0;
 }
 
-#item-selected p {
+#item-description {
     font-size: 1em;
     color: #d1d1e9;
 }

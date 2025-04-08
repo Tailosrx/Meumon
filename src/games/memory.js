@@ -120,7 +120,6 @@ export function iniciarJuegoMemoria(mascota, misiones) {
 
       AudioController.play("menu");
 
-      mascota.actualizarProgreso("jugar");
       Pet.guardarEstado(mascota, misiones);
 
       setTimeout(() => {

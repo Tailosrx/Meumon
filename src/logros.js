@@ -1,6 +1,9 @@
 import { actualizarMonedas } from "./utils.js";
 import Pet from "./pet.js";
 import AudioController from "./audioController.js";
+import { añadirRecompensaAlInventario } from "./inventory.js";
+
+const equipables = ["Sombrero de Mago"]; //Array de items equipables
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
@@ -97,6 +100,9 @@ function completarMision(id, mascota, button, misiones) {
     if (mision.recompensa == 10) {
       mascota.monedas += mision.recompensa;
       actualizarMonedas(mascota);
+    } else if (equipables.includes(mision.recompensa)) {
+      // Si la recompensa es un objeto equipable
+      añadirRecompensaAlInventario(mision.recompensa);
     } else {
       mascota.agregarRecompensa(mision.recompensa);
       añadirRecompensaAlInventario(mision.recompensa);
@@ -116,67 +122,15 @@ function completarMision(id, mascota, button, misiones) {
     button.disabled = true;
     button.classList.add("endMission");
 
+    
+
     // hace un save del estado
     Pet.guardarEstado(mascota, misiones);
     break;
   }
 }
 
-const equipables = ["Sombrero de Mago"];
-let personaje = { equipado: null };
 
-function añadirRecompensaAlInventario(recompensa) {
-  if (recompensa == 10) return;
-
-  const inventoryGrid = document.getElementById("inventory-grid");
-  const itemInfo = document.getElementById("item-info"); // Elemento para mostrar info
-
-  const itemDiv = document.createElement("div");
-  itemDiv.textContent = recompensa;
-
-  itemDiv.className = "inventory-item";
-
-  itemDiv.style.color = "yellow";
-
-  itemDiv.addEventListener("click", () => {
-    document.getElementById("item-name").textContent = recompensa;
-    document.getElementById("item-image").src = `../assets/images/${recompensa
-      .toLowerCase()
-      .replace(/ /g, "_")}.png`;
-    document.getElementById("item-description").textContent =
-      obtenerDescripcion(recompensa);
-
-    const equipButton = document.getElementById("equip-button");
-    equipButton.style.display = equipables.includes(recompensa)
-      ? "block"
-      : "none";
-    equipButton.textContent =
-    personaje.equipado === recompensa ? "Desequipar" : "Equipar";
-
-    equipButton.onclick = () => toggleEquip(recompensa);
-  });
-
-  const equipButton = document.createElement("button");
-
-  inventoryGrid.appendChild(itemDiv);
-}
-
-function obtenerDescripcion(recompensa) {
-  const descripciones = {
-    "Manzana roja": "Una jugosa manzana roja.", // Es la comida por defecto (alimenta 10 de energía)
-    "Pelota de Tenis": "Una pelota de tenis amarilla.", // Juguete por defecto (aumenta fel 10)
-    "Jabon de Ducha": "Un jabon lleno de gel.", // Jabon para ducharse (aumenta limpieza 100)
-    "Sombrero de Mago": "Un sombrero de un mago verde olvidado.", // Puramente estetico
-  };
-
-  return descripciones[recompensa] || "Un objeto misterioso.";
-}
-
-// Pilla items iniciales desde button.js
-document.addEventListener("DOMContentLoaded", () => {
-  const items = ["Manzana roja", "Pelota de Tenis", "Jabon de Ducha"];
-  items.forEach(añadirRecompensaAlInventario);
-});
 
 export function mostrarSubidaDeNivel(nivel, desbloqueos) {
   const modal = document.getElementById("nivelUpModal");

@@ -43,12 +43,12 @@
         <h2 id="title-inventory">Mi Inventario</h2>
         <div id="inventory-grid">
         </div>
-        <div id="item-selected">
-            <h3 id="item-name"></h3>
-            <img id="item-image" src="../assets/images/fondo.png" alt="Imagen del ítem">
+        <div id="item-details">
+            <h2 id="item-name"></h2>
+            <img id="item-image" src="" alt="Item Image">
             <p id="item-description"></p>
-            <button id="equip-button" class="hidden"></button>
-        </div>
+            <button id="equip-button" style="display: none;">Equipar</button>
+          </div>
     </div>
     <!---->
     <!--Logros-->
@@ -62,7 +62,9 @@
             <img id="logro-image" src="../assets/images/fondo.png" alt="Imagen del logro">
             <p id="logro-description"></p>
         </div>
+    </div>
     <!---->
+    
 
     <!--Modal lvl-->
     <div id="nivelUpModal" class="hidden">
@@ -76,7 +78,7 @@
     <!---->
 
     <!--Modal Tutorial-->
-    <div id="tutorial-modal" class="hidden">
+    <div id="tutorial-modal" class="">
         <div class="modal-content">
           <p id="tutorial-texto">¡Bienvenido a Meumon! </p>
           <button id="tutorial-siguiente" onclick="siguienteMensajeTutorial()">Siguiente</button>
@@ -87,6 +89,8 @@
     
     <script type="module" src="button.js"></script>
     <script type="module" src="logros.js"></script>
+    <script type="module" src="tutorial.js"></script>
+    <script type="module" src="inventory.js"></script>
     <script type="module" src="games/memory.js"></script>
     
    

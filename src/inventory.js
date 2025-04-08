@@ -1,83 +1,151 @@
-document.getElementById("icon-shop").addEventListener("click", () => {
-    mostrarInventario();
+const equipables = ["Sombrero del Mago"];
+let personaje = { equipado: null };
+
+export function añadirRecompensaAlInventario(recompensa) {
+  if (recompensa == 10) return;
+
+  const inventoryGrid = document.getElementById("inventory-grid");
+
+  // Verificar si el objeto ya está en el inventario
+  const existe = Array.from(inventoryGrid.children).some(
+    (item) => item.textContent === recompensa
+  );
+  if (existe) return;
+
+  // Crear el elemento del objeto
+  const itemDiv = document.createElement("div");
+  itemDiv.textContent = recompensa;
+  itemDiv.className = "inventory-item";
+  itemDiv.style.color = "yellow";
+
+  // Agregar evento de clic para seleccionar el objeto
+  itemDiv.addEventListener("click", () => {
+    document.getElementById("item-name").textContent = recompensa;
+    document.getElementById("item-image").src = `../assets/images/${recompensa
+      .toLowerCase()
+      .replace(/ /g, "_")}.png`;
+    document.getElementById("item-description").textContent =
+      obtenerDescripcion(recompensa);
+
+    // Ocultar el botón de equipar/desequipar para objetos no equipables
+    const equipButton = document.getElementById("equip-button");
+    equipButton.style.display = "none";
   });
-  
-  document.getElementById("close-inventory").addEventListener("click", () => {
-    const inventoryContainer = document.getElementById("inventory-container");
-    inventoryContainer.classList.add("hide");
-    setTimeout(() => {
-      inventoryContainer.classList.remove("show");
-    }, 300); // Tiempo de la transición
+
+  inventoryGrid.appendChild(itemDiv);
+}
+
+export function añadirEquipableAlInventario(recompensa) {
+  if (recompensa == 10) return;
+
+  const inventoryGrid = document.getElementById("inventory-grid");
+
+  // Verificar si el objeto ya está en el inventario
+  const existe = Array.from(inventoryGrid.children).some(
+    (item) => item.textContent === recompensa
+  );
+  if (existe) return;
+
+  // Crear el elemento del objeto
+  const itemDiv = document.createElement("div");
+  itemDiv.textContent = recompensa;
+  itemDiv.className = "inventory-item";
+  itemDiv.style.color = "yellow";
+
+  // Agregar evento de clic para seleccionar el objeto
+  itemDiv.addEventListener("click", () => {
+    document.getElementById("item-name").textContent = recompensa;
+    document.getElementById("item-image").src = `../assets/images/${recompensa
+      .toLowerCase()
+      .replace(/ /g, "_")}.png`;
+    document.getElementById("item-description").textContent =
+      obtenerDescripcion(recompensa);
+
+    // Mostrar el botón de equipar/desequipar solo si es equipable
+        const equipButton = document.getElementById("equip-button");
+        if (equipables.includes(recompensa)) {
+          equipButton.style.display = "block"; // Mostrar el botón
+          equipButton.textContent =
+            personaje.equipado === recompensa ? "Desequipar" : "Equipar";
+    
+          // Agregar evento para equipar/desequipar
+          equipButton.onclick = () => toggleEquip(recompensa);
+        } else {
+          equipButton.style.display = "none"; // Ocultar el botón si no es equipable
+        }
+
+    // Agregar evento para equipar/desequipar
+    equipButton.onclick = () => toggleEquip(recompensa);
   });
-  
-  function mostrarInventario() {
-    const inventoryGrid = document.getElementById("inventory-grid");
-    inventoryGrid.innerHTML = ""; // Limpiar el contenido actual
-  
-    mascota.inventario.forEach((item) => {
-      const itemElement = document.createElement("div");
-      itemElement.classList.add("inventory-item");
-      itemElement.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" title="${item.name}">
-        <p>${item.name}</p>
-        <button onclick="seleccionarItem('${item.id}')">
-          ${item.equipped ? "Desequipar" : "Equipar"}
-        </button>
-      `;
-      inventoryGrid.appendChild(itemElement);
-    });
-  
-    document.getElementById("inventory-container").classList.remove("hidden");
+
+  inventoryGrid.appendChild(itemDiv);
+}
+
+function toggleEquip(recompensa) {
+  if (personaje.equipado === recompensa) {
+    // Desequipar el objeto
+    personaje.equipado = null;
+  } else {
+    // Equipar el objeto
+    personaje.equipado = recompensa;
   }
-  
-  function seleccionarItem(itemId) {
-    const selectedItem = mascota.inventario.find((item) => item.id === itemId);
-  
-    if (selectedItem) {
-      document.getElementById("item-name").textContent = selectedItem.name;
-      document.getElementById("item-image").src = selectedItem.image;
-      document.getElementById("item-description").textContent =
-        selectedItem.description;
-  
-      const equipButton = document.getElementById("equip-button");
-      equipButton.textContent = selectedItem.equipped ? "Desequipar" : "Equipar";
-      equipButton.classList.remove("hidden");
-  
-      // Agregar evento para equipar/desequipar
-      equipButton.onclick = () => toggleEquipItem(selectedItem.id);
+
+  // Actualizar la apariencia de la mascota
+  actualizarAparienciaMascota();
+
+  // Actualizar el botón de equipar/desequipar
+  actualizarInventario();
+}
+
+function actualizarInventario() {
+  const inventoryGrid = document.getElementById("inventory-grid");
+  const items = Array.from(inventoryGrid.children);
+
+  items.forEach((itemDiv) => {
+    const recompensa = itemDiv.textContent;
+    const equipButton = document.getElementById("equip-button");
+
+    if (equipables.includes(recompensa)) {
+      equipButton.textContent =
+        personaje.equipado === recompensa ? "Desequipar" : "Equipar";
     }
+  });
+}
+
+function actualizarAparienciaMascota() {
+  const mascotaImg = document.getElementById("mascota");
+
+  const skins = {
+    "Sombrero del Mago": "../assets/images/pet_hat.png",
   }
-  
-  function toggleEquipItem(itemId) {
-    const item = mascota.inventario.find((item) => item.id === itemId);
-  
-    if (item) {
-      // Desequipar todos los ítems si el nuevo ítem se equipa
-      if (!item.equipped) {
-        mascota.inventario.forEach((i) => (i.equipped = false));
-      }
-  
-      // Cambiar el estado del ítem seleccionado
-      item.equipped = !item.equipped;
-  
-      // Actualizar la apariencia de la mascota
-      actualizarAparienciaMascota();
-  
-      // Actualizar el botón de equipar/desequipar
-      seleccionarItem(itemId);
-  
-      // Guardar el estado de la mascota
-      Pet.guardarEstado(mascota, mascota.misiones);
-    }
+
+
+  if (personaje.equipado) {
+    // Verificar si el ítem tiene una apariencia específica
+    mascotaImg.src = skins[personaje.equipado] || "../assets/images/pixels.png";
+  } else {
+    mascotaImg.src = "../assets/images/pixels.png"; // Imagen por defecto
   }
-  
-  function actualizarAparienciaMascota() {
-    const mascotaImg = document.getElementById("mascota");
-    const itemEquipado = mascota.inventario.find((item) => item.equipped);
-  
-    if (itemEquipado) {
-      mascotaImg.src = itemEquipado.image; // Cambiar la imagen de la mascota
-    } else {
-      mascotaImg.src = "../assets/images/pixels.png"; // Imagen por defecto
-    }
-  }
+}
+
+function obtenerDescripcion(recompensa) {
+  const descripciones = {
+    "Manzana roja": "Una jugosa manzana roja.", // Es la comida por defecto (alimenta 10 de energía)
+    "Pelota de Tenis": "Una pelota de tenis amarilla.", // Juguete por defecto (aumenta felicidad 10)
+    "Jabon de Ducha": "Un jabón lleno de gel.", // Jabón para ducharse (aumenta limpieza 100)
+    "Sombrero del Mago": "Un sombrero de un mago verde olvidado.", // Puramente estético
+  };
+
+  return descripciones[recompensa] || "Un objeto misterioso.";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const items = ["Manzana roja", "Pelota de Tenis", "Jabon de Ducha"];
+  items.forEach(añadirRecompensaAlInventario);
+
+  // Añadir un objeto equipable como ejemplo
+  añadirEquipableAlInventario("Sombrero del Mago");
+  const itemImage = document.getElementById("item-image");
+  itemImage.src = ""; // No mostrar ninguna imagen por defecto
+  itemImage.alt = ""; 
+});
