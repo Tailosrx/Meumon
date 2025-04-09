@@ -4,7 +4,8 @@
     - [X] Mostrar Ventana de subida de level
     - [X] Arreglar tema botones mision completada
     - [ ] Pensar que juegos implementar
-    - [ ] Meter los audios de estados
+    - [X] Meter los audios de estados
+    - [ ] Meter audio de equipar/desequipar
     - [ ] Meter mas funcionalidades con los estados (si esta cansado automaticamente dormira,...)
     - [ ] Implementar el sistema de paletas de colores
     - [ ] Implementar un sistema de configuracion

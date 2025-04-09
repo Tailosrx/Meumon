@@ -4,6 +4,8 @@ class AudioController {
         this.audioFiles = {
             menu: new Audio("../assets/sound/soundtrack.mp3"),
             gameCard: new Audio("../assets/sound/gameCard.mp3"),
+            sleeping: new Audio("../assets/sound/sleepSong.mp3"),
+            alert: new Audio("../assets/sound/alert.wav"),
         };
 
         Object.values(this.audioFiles).forEach((audio) => { //config initial (if required modified the values)

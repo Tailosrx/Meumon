@@ -2,6 +2,7 @@ import { actualizarStats } from "./utils.js";
 import { actualizarMisiones, mostrarSubidaDeNivel } from "./logros.js";
 import { iniciarJuegoMemoria } from "./games/memory.js";
 import { mostrarMensaje } from "./messageStat.js";
+import AudioController from "./audioController.js";
 
 export default class Pet {
   constructor() {
@@ -19,6 +20,14 @@ export default class Pet {
     this.enDescanso = false; 
 
     setInterval(() => this.reducirStats(), 3000); // Reducir los stats cada 3 segundos
+  }
+
+  reproducirSonidoAlerta() {
+    const sonidoAlerta = new Audio("../assets/sound/alert.wav");
+    sonidoAlerta.volume = 0.3; // Ajustar el volumen del sonido
+    sonidoAlerta.play().catch((error) => {
+      console.error("Error al reproducir el sonido de alerta:", error);
+    });
   }
 
   static cargarEstado(misiones) {
@@ -98,6 +107,9 @@ export default class Pet {
 
     let img = document.getElementById("mascota");
     img.src = "../assets/images/pet_ducha.png";
+    let shower = new Audio("../assets/sound/brush.wav");
+    shower.play();
+
     this.higiene = 100;
     this.actualizarProgreso("duchar");
     Pet.guardarEstado(this, this.misiones);
@@ -121,6 +133,8 @@ export default class Pet {
     if (this.estado !== "durmiendo") {
       this.estado = "durmiendo";
       this.energia = 100;
+      AudioController.play("sleeping");
+
       this.actualizarProgreso("descansar");
       Pet.guardarEstado(this, this.misiones);
       actualizarStats(this); 
@@ -154,49 +168,59 @@ export default class Pet {
   
     /* Efectos Negativos
      ------------------- */
-    if (this.energia === 0) {
+    if (this.nivel >= 2 && this.energia === 0) {
       this.estado = "agotado";
       this.felicidad = Math.max(this.felicidad - 30, 0);
       this.iniciarDescanso(); // descanso automatico
     } else if (this.felicidad === 0) {
-      this.estado = "triste";
+      this.estado = "triste"; // No querra jugar hasta que juegues o item especial, ademas penalizacion en coins
+      this.energia = Math.max(this.energia - 10, 0);
     } else if (this.higiene === 0) {
-      this.estado = "sucia";
+      this.estado = "sucia"; // solo podras limpiarla
+      this.felicidad = Math.max(this.felicidad - 10, 0);
     } else {
       this.estado = "activo"; // Estado por defecto si no hay problemas
     }
   
     /* Efectos Positivos
      ------------------- */
-    if (this.energia === 100) {
+     if (this.energia === 100) {
+      this.reproducirSonidoAlerta();
       mostrarMensaje("¡Energía al máximo! La mascota está llena de energía.", "success");
     }
-  
+
     if (this.felicidad === 100) {
+      this.reproducirSonidoAlerta();
       mostrarMensaje("¡Felicidad al máximo! La mascota está muy feliz.", "success");
     }
-  
+
     if (this.higiene === 100) {
+      this.reproducirSonidoAlerta();
       mostrarMensaje("¡Higiene al máximo! La mascota está completamente limpia.", "success");
     }
-  
+
     // Mostrar mensaje solo si el estado cambia
     if (estadoAnterior !== this.estado) {
       switch (this.estado) {
         case "agotado":
+          this.reproducirSonidoAlerta();
           mostrarMensaje("Tu mascota está muy agotada. Va a descansar. Dile Buenas Noches.", "error");
           break;
         case "triste":
+          this.reproducirSonidoAlerta();
           mostrarMensaje("La mascota está triste. Necesita jugar.", "warning");
           break;
         case "sucia":
+          this.reproducirSonidoAlerta();
           mostrarMensaje("La mascota está sucia. Necesita un baño.", "warning");
           break;
         case "activo":
+          this.reproducirSonidoAlerta();
           mostrarMensaje("Tu mascota está activa y lista para jugar.", "success");
           break;
       }
     }
+  
   }
 
   
@@ -265,6 +289,9 @@ export default class Pet {
 
   iniciarDescanso() {
     if (this.enDescanso) return; // Evitar múltiples descansos
+    let img = document.getElementById("mascota");
+    img.src = "../assets/images/pet_sleep.png";
+    AudioController.play("sleeping");
 
     this.enDescanso = true; // Bloquear acciones
     const tiempoDescanso = 30000; // 30 segundos de descanso
@@ -273,11 +300,16 @@ export default class Pet {
 
     // Temporizador para finalizar el descanso
     setTimeout(() => {
-        this.enDescanso = false; // Desbloquear acciones
-        this.energia = 50; // Restaurar algo de energía
-        this.estado = "activo"; // Cambiar el estado a activo
+        this.enDescanso = false; 
+        this.energia = 50; 
+        this.estado = "activo"; 
+        img.src = "../assets/images/pixels.png"; 
         mostrarMensaje("La mascota ha terminado de descansar y está activa nuevamente.", "success");
-        actualizarStats(this); // Actualizar los stats en el DOM
+        actualizarStats(this); 
     }, tiempoDescanso); 
   }
+
+
+ 
+
 }
