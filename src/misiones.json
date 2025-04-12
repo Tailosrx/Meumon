@@ -54,7 +54,7 @@
         "id": "equipar_sombrero",
         "titulo": "El Sombrero del Mago",
         "descripcion": "Tu mascota encontró un misterioso sombrero, le da curiosidad ponerselo",
-        "meta": 7,
+        "meta": 1,
         "progreso": 0,
         "completado": false,
         "recompensa": 15
@@ -73,6 +73,54 @@
       "nivel": 3,
       "desbloqueos": [
         "Paleta Aquatico"
+      ]
+    }
+  },
+  {
+    "nivel": 3,
+    "misiones": [
+      {
+        "id": "alimentar_15",
+        "titulo": "Alimenta a tu mascota 15 veces",
+        "descripcion": "Tu mascota necesita más energía para seguir jugando, alimentala 15 veces.",
+        "meta": 15,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": 30
+      },
+      {
+        "id": "jugar_10",
+        "titulo": "Juega con tu mascota 10 veces",
+        "descripcion": "Tu mascota quiere jugar más, pasa tiempo con ella jugando 10 veces.",
+        "meta": 10,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": 25
+      },
+      {
+        "id": "duchar_5",
+        "titulo": "Limpia a tu mascota 5 veces",
+        "descripcion": "Tu mascota necesita estar limpia para estar feliz, dale 5 duchas.",
+        "meta": 5,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": 20
+      },
+      {
+        "id": "descansar_5",
+        "titulo": "Haz que tu mascota descanse 5 veces",
+        "descripcion": "Tu mascota necesita descansar más para recuperar energía, haz que descanse 5 veces.",
+        "meta": 5,
+        "progreso": 0,
+        "completado": false,
+        "recompensa": 20
+      }
+    ],
+    "recompensas": {
+      "nivel": 4,
+      "desbloqueos": [
+        "Capa de Invisibilidad",
+        "Sombrero de Explorador"
       ]
     }
   }

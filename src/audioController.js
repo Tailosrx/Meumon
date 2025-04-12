@@ -10,7 +10,7 @@ class AudioController {
 
         Object.values(this.audioFiles).forEach((audio) => { //config initial (if required modified the values)
             audio.loop = true; 
-            audio.volume = 0.3; 
+            audio.volume = 0.2; 
           });
     }
 

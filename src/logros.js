@@ -90,7 +90,7 @@ export function actualizarMisiones(mascota, misiones) {
   });
 }
 
-function completarMision(id, mascota, button, misiones) {
+export function completarMision(id, mascota, button, misiones) {
   console.log("Completando misión", id);
 
   for (const nivel of misiones) {
@@ -140,10 +140,6 @@ export function mostrarSubidaDeNivel(nivel, desbloqueos) {
 
   modal.classList.toggle("hidden");
   levelUpSound.play();
-
-
-  
-
 
 
   nivelElem.textContent = `¡Has subido al nivel ${nivel}! 🎉`;

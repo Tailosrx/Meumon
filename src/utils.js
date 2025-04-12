@@ -1,4 +1,5 @@
 export function actualizarStats(mascota) {
+
     const energiaElem = document.getElementById("energia");
     const felicidadElem = document.getElementById("felicidad");
     const higieneElem = document.getElementById("higiene");
