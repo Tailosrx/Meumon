@@ -9,7 +9,10 @@ export function mostrarMensaje(mensaje, tipo) {
     return;
   }
 
-  
+  // Evitar mensajes duplicados
+  if (mensajesActivos.has(mensaje)) {
+    return; // No mostrar el mensaje si ya está activo
+  }
 
   // Añadir el mensaje al conjunto de mensajes activos
   mensajesActivos.add(mensaje);
@@ -19,12 +22,11 @@ export function mostrarMensaje(mensaje, tipo) {
   mensajeDiv.className = `mensaje ${tipo}`; // Añadir clase según el tipo (error, warning, success)
   mensajeDiv.textContent = mensaje;
 
-  // Añadir el mensaje al contenedor
+
   mensajesContainer.appendChild(mensajeDiv);
 
-  // Eliminar el mensaje automáticamente después de 5 segundos
   setTimeout(() => {
     mensajeDiv.remove();
-    mensajesActivos.delete(mensaje); // Eliminar el mensaje del conjunto de mensajes activos
+    mensajesActivos.delete(mensaje); 
   }, 5000);
 }

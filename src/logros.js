@@ -7,20 +7,28 @@ const equipables = ["Sombrero de Mago"]; //Array de items equipables
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const response = await fetch("./misiones.json");
-    if (!response.ok) throw new Error("No se pudo cargar misiones.json");
-    const misionesJSON = await response.json();
-    const mascota = Pet.cargarEstado(misionesJSON);
+    let misiones = JSON.parse(localStorage.getItem("misiones"));
 
-    actualizarMisiones(mascota, mascota.misiones);
+    // Si no hay misiones guardadas, realizar el fetch de las misiones predeterminadas
+    if (!misiones) {
+      const response = await fetch("./misiones.json");
+      if (!response.ok) throw new Error("No se pudo cargar misiones.json");
+      const misionesPredeterminadas = await response.json();
+      misiones = misionesPredeterminadas.niveles;
+
+      // Guardar las misiones predeterminadas en el almacenamiento local
+      localStorage.setItem("misiones", JSON.stringify(misiones));
+    }
+
+    // Cargar el estado de la mascota
+    const mascota = Pet.cargarEstado();
+
+    // Actualizar la interfaz con las misiones y monedas
+    actualizarMisiones(mascota, misiones);
     actualizarMonedas(mascota);
-    let coins = document.getElementById("monedas");
 
     AudioController.play("menu");
 
-    document.getElementById("jugar").addEventListener("click", () => {
-      AudioController.play("gameCard");
-    });
 
     document.getElementById("logros").addEventListener("click", (event) => {
       if (
@@ -28,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         !event.target.classList.contains("endMission")
       ) {
         const id = event.target.getAttribute("data-id");
-        completarMision(id, mascota, event.target, mascota.misiones);
+        completarMision(id, mascota, event.target, misiones);
       }
     });
 
@@ -96,7 +104,7 @@ export function completarMision(id, mascota, button, misiones) {
   for (const nivel of misiones) {
     const mision = nivel.misiones.find((m) => m.id === id);
     if (!mision || mision.completado) return;
-
+/*
     if (mision.recompensa == 10) {
       mascota.monedas += mision.recompensa;
       actualizarMonedas(mascota);
@@ -104,8 +112,23 @@ export function completarMision(id, mascota, button, misiones) {
       // Si la recompensa es un objeto equipable
       añadirRecompensaAlInventario(mision.recompensa);
     } else {
-      mascota.agregarRecompensa(mision.recompensa);
       añadirRecompensaAlInventario(mision.recompensa);
+    }*/
+
+
+      
+    switch (true) {
+      case mision.recompensa === 10:
+        mascota.monedas += mision.recompensa;
+        actualizarMonedas(mascota);
+      break;
+      case equipables.includes(mision.recompensa):
+      // Si la recompensa es un objeto equipable
+        añadirRecompensaAlInventario(mision.recompensa);
+      break;
+      default:
+        añadirRecompensaAlInventario(mision.recompensa);
+      break;
     }
     mision.completado = true;
 
@@ -122,15 +145,49 @@ export function completarMision(id, mascota, button, misiones) {
     button.disabled = true;
     button.classList.add("endMission");
 
-    
-
     // hace un save del estado
     Pet.guardarEstado(mascota, misiones);
     break;
   }
 }
 
+export function completarMisionID(id) {
+  const misiones = JSON.parse(localStorage.getItem("misiones")) || [];
+  const mision = misiones
+    .flatMap((nivel) => nivel.misiones)
+    .find((m) => m.id === id);
 
+  if (!mision) {
+    console.warn(`La misión con id "${id}" no existe.`);
+    return;
+  }
+
+  if (mision.completado) {
+    console.log(`La misión con id "${id}" ya está completada.`);
+    return;
+  }
+
+  // Declarar e inicializar mascota al inicio
+  const mascota = Pet.cargarEstado(); // Cargar el estado actual de la mascota
+
+  mision.completado = true;
+
+  localStorage.setItem("misiones", JSON.stringify(misiones));
+
+  if (mision.recompensa) {
+    if (mision.recompensa === 10) {
+      mascota.monedas += mision.recompensa;
+      actualizarMonedas(mascota);
+    } else {
+      añadirRecompensaAlInventario(mision.recompensa);
+    }
+  }
+
+  Pet.guardarEstado(mascota, misiones);
+  actualizarMisiones(mascota, misiones); // Actualizar la interfaz de misiones
+
+  console.log(`Misión "${id}" completada con éxito.`);
+}
 
 export function mostrarSubidaDeNivel(nivel, desbloqueos) {
   const modal = document.getElementById("nivelUpModal");
@@ -140,7 +197,6 @@ export function mostrarSubidaDeNivel(nivel, desbloqueos) {
 
   modal.classList.toggle("hidden");
   levelUpSound.play();
-
 
   nivelElem.textContent = `¡Has subido al nivel ${nivel}! 🎉`;
   desbloqueosElem.innerHTML =

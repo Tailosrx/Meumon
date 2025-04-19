@@ -3,24 +3,40 @@ import { actualizarMisiones, mostrarSubidaDeNivel } from "./logros.js";
 import { iniciarJuegoMemoria } from "./games/memory.js";
 import { mostrarMensaje } from "./messageStat.js";
 import AudioController from "./audioController.js";
+import PetUIController from "./petUIController.js";
+
+const valors = {
+  MAX_STAT: 100,
+  MIN_STAT: 0,
+  REDUCCION_MAXIMA: 4,
+  INTERVALO_STATS: 3000,
+  INCREMENTO_STAT: 5,
+};
 
 export default class Pet {
   constructor() {
-    this.energia = 20;
-    this.felicidad = 30;
-    this.higiene = 50;
+    this.energia = valors.MAX_STAT;
+    this.felicidad = valors.MAX_STAT;
+    this.higiene = valors.MAX_STAT;
     this.nivel = 1;
     this.monedas = 0;
     this.misiones = {};
     this.inventario = [];
     this.estado = "activo";
     this.cooldownAlimentar = false;
-    this.cooldownJugar = false;
     this.cooldownLimpiar = false;
     this.enDescanso = false;
     this.enJuego = false;
+    this.congelarStats = false;
+    this.mensajeMostrado = false;
 
-    setInterval(() => this.reducirStats(), 3000); 
+    // Cargar el estado guardado
+    const estadoGuardado = JSON.parse(localStorage.getItem("mascota"));
+    if (estadoGuardado) {
+      Object.assign(this, estadoGuardado);
+    }
+
+    setInterval(() => this.reducirStats(), valors.INTERVALO_STATS);
   }
 
   reproducirSonidoAlerta() {
@@ -33,12 +49,25 @@ export default class Pet {
 
   static cargarEstado(misiones) {
     const mascota = new Pet();
-    mascota.misiones = misiones.niveles;
     const estadoGuardado = JSON.parse(localStorage.getItem("mascota"));
+    const misionesGuardadas = JSON.parse(localStorage.getItem("misiones"));
+
+    //mascota.misiones = misiones.niveles;
     if (estadoGuardado) {
       Object.assign(mascota, estadoGuardado);
+
+      mascota.energia = Math.max(mascota.energia, 10);
+      mascota.felicidad = Math.max(mascota.felicidad, 10);
+      mascota.higiene = Math.max(mascota.higiene, 10);
+
+      mascota.enDescanso = false;
+      mascota.congelarStats = false;
     }
-    mascota.misiones = misiones; // Asignar las misiones directamente
+
+
+    
+
+    mascota.misiones = misionesGuardadas || misiones.niveles;
     return mascota;
   }
 
@@ -57,10 +86,26 @@ export default class Pet {
       return;
     }
 
+    if (this.enJuego) {
+      mostrarMensaje(
+        "La mascota está jugando y no puede ser alimentada ahora.",
+        "warning"
+      );
+      return;
+    }
+
+    if (this.estadoBloqueado()) {
+      mostrarMensaje(
+        "La mascota está ocupada y no puede ser alimentada ahora.",
+        "warning"
+      );
+      return;
+    }
+
     let eat = new Audio("../assets/sound/eat.wav");
     eat.play();
-    this.energia = Math.min(this.energia + 10, 100);
-    this.felicidad = Math.min(this.felicidad + 5, 100);
+    this.energia = Math.min(this.energia + 10, valors.MAX_STAT);
+    this.felicidad = Math.min(this.felicidad + 5, valors.MAX_STAT);
     this.actualizarProgreso("alimentar");
     this.actualizarAparienciaMascota();
     Pet.guardarEstado(this, this.misiones);
@@ -69,14 +114,12 @@ export default class Pet {
 
     this.cooldownAlimentar = true;
     const button = document.getElementById("alimentar");
-    button.disabled = true;
-    button.textContent = "Espera...";
-
-    setTimeout(() => {
-      this.cooldownAlimentar = false;
-      button.disabled = false;
-      button.textContent = "🍎 Alimentar";
-    }, 3000);
+    PetUIController.desactivarBotonTemporalmente(
+      button,
+      3000,
+      "Espera...",
+      "🍎 Alimentar"
+    );
   }
 
   jugar() {
@@ -88,62 +131,138 @@ export default class Pet {
       return;
     }
 
-    this.enJuego = true;
-    this.energia = Math.max(this.energia - 10, 0);
-    this.felicidad = Math.min(this.felicidad + 40, 100);
-    iniciarJuegoMemoria(this, this.misiones);
-
-    this.actualizarProgreso("jugar");
-    Pet.guardarEstado(this, this.misiones);
-    actualizarStats(this);
-    
-
-    this.cooldownJugar = true;
-    const button = document.getElementById("jugar");
-
-   
-    setTimeout(() => {
-      this.enJuego = false; 
-      Pet.guardarEstado(this, this.misiones);
-      actualizarStats(this);
-      actualizarMisiones(this, this.misiones);
-    }, 1000); 
-  }
-
-  limpiar() {
-    if (this.enDescanso) {
+    if (this.estadoBloqueado()) {
       mostrarMensaje(
-        "La mascota está descansando y no puede jugar.",
+        "La mascota está ocupada y no puede jugar ahora.",
         "warning"
       );
       return;
     }
 
-    let img = document.getElementById("mascota");
-    img.src = "../assets/images/pet_ducha.png";
-    let shower = new Audio("../assets/sound/brush.wav");
+    this.enJuego = true;
+    this.congelarStats = true;
+
+    this.energia = Math.max(this.energia - 10, valors.MIN_STAT);
+    this.felicidad = Math.min(this.felicidad + 40, valors.MAX_STAT);
+
+    if (!this.cambiarEstado("jugando")) return;
+
+    mostrarMensaje("¡La mascota está jugando y divirtiéndose!", "success");
+
+    iniciarJuegoMemoria(this, this.misiones);
+
+    this.actualizarProgreso("jugar");
+
+    Pet.guardarEstado(this, this.misiones);
+    actualizarStats(this);
+
+    const button = document.getElementById("jugar");
+    PetUIController.desactivarBotonTemporalmente(
+      button,
+      3000,
+      "Espera...",
+      "🎮 Jugar"
+    );
+
+    setTimeout(() => {
+      this.enJuego = false;
+      this.cambiarEstado("activo");
+      this.congelarStats = false;
+      Pet.guardarEstado(this, this.misiones);
+      actualizarStats(this);
+      actualizarMisiones(this, this.misiones);
+    }, 1000);
+  }
+
+  limpiar() {
+    if (this.enDescanso) {
+      mostrarMensaje(
+        "La mascota está descansando y no puede ducharse.",
+        "warning"
+      );
+      return;
+    }
+
+    if (this.enJuego) {
+      mostrarMensaje("La mascota está jugando y no puede ducharse.", "warning");
+      return;
+    }
+
+    if (this.estadoBloqueado()) {
+      mostrarMensaje(
+        "La mascota está ocupada y no puede ducharse ahora.",
+        "warning"
+      );
+      return;
+    }
+
+    if (!this.cambiarEstado("duchandose")) return;
+
+    this.enDescanso = true; // Bloquear otras acciones mientras se ducha
+    this.congelarStats = true;
+    this.actualizarAparienciaMascota();
+    const shower = new Audio("../assets/sound/brush.wav");
+    shower.loop = true;
     shower.play();
 
-    this.higiene = 100;
-    this.actualizarProgreso("duchar");
+    const button = document.getElementById("duchar");
+    button.textContent = "🛁 Cancelar ducha";
+
+    const intervaloDucha = setInterval(() => {
+      this.higiene = Math.min(
+        this.higiene + 10, // Incrementar higiene
+        valors.MAX_STAT
+      );
+      actualizarStats(this);
+
+      if (this.higiene === valors.MAX_STAT) {
+        clearInterval(intervaloDucha);
+        this.terminarDucha(shower, button);
+        mostrarMensaje("¡La mascota está completamente limpia!", "success");
+
+        // Restablecer estados
+        this.enDescanso = false;
+        this.congelarStats = false;
+        this.cambiarEstado("activo");
+        Pet.guardarEstado(this, this.misiones);
+        actualizarStats(this);
+        actualizarMisiones(this, this.misiones);
+      }
+    }, 1000);
+
+    button.onclick = () => {
+      clearInterval(intervaloDucha);
+      this.terminarDucha(shower, button);
+      mostrarMensaje("La ducha ha sido cancelada.", "warning");
+
+      // Restablecer estados
+      this.enDescanso = false;
+      this.congelarStats = false;
+      this.cambiarEstado("activo");
+      Pet.guardarEstado(this, this.misiones);
+      actualizarStats(this);
+      actualizarMisiones(this, this.misiones);
+    };
+  }
+
+  terminarDucha(shower, button) {
+    this.enDescanso = false;
+    this.estado = "activo";
+    this.congelarStats = false;
+    shower.pause();
+    shower.currentTime = 0;
+    button.textContent = "🛁 Bañar";
+    button.onclick = () => this.limpiar(); // Restaurar el evento original
+
+    this.actualizarAparienciaMascota();
+
     Pet.guardarEstado(this, this.misiones);
     actualizarStats(this);
     actualizarMisiones(this, this.misiones);
-
-    this.cooldownLimpiar = true;
-    const button = document.getElementById("duchar");
-    button.disabled = true;
-    button.textContent = "Espera...";
-
-    setTimeout(() => {
-      this.cooldownLimpiar = false;
-      button.disabled = false;
-      button.textContent = "🛁 Bañar";
-      img.src = "../assets/images/pixels.png";
-    }, 3000);
   }
 
   descansar() {
+    // Verificar si la mascota ya está ocupada
     if (this.enJuego || this.enDescanso) {
       mostrarMensaje(
         "La mascota está ocupada y no puede descansar ahora.",
@@ -152,116 +271,158 @@ export default class Pet {
       return;
     }
 
-    this.estado = "durmiendo";
+    // Cambiar el estado a "durmiendo"
+    if (!this.cambiarEstado("durmiendo")) return;
+
     this.enDescanso = true;
-    this.energia = 100;
+    this.congelarStats = true;
+    this.actualizarAparienciaMascota();
     AudioController.play("sleeping");
 
-    this.actualizarProgreso("descansar");
-    this.actualizarAparienciaMascota();
-    Pet.guardarEstado(this, this.misiones);
-    actualizarStats(this);
-    actualizarMisiones(this, this.misiones);
+    mostrarMensaje("La mascota está descansando. 💤", "success");
 
-    setTimeout(() => {
-      this.despertar();
-    }, 30000); // 30 segundos de descanso
+    const button = document.getElementById("descansar");
+    PetUIController.actualizarBoton(button, "😴 Cancelar descanso", () => {
+      this.terminarDescanso(button, true);
+    });
+
+    const intervaloDescanso = setInterval(() => {
+      this.energia = Math.min(
+        this.energia + valors.INCREMENTO_STAT,
+        valors.MAX_STAT
+      );
+      actualizarStats(this);
+
+      // Finalizar descanso automáticamente si la energía está al máximo
+      if (this.energia === valors.MAX_STAT) {
+        clearInterval(intervaloDescanso);
+        this.terminarDescanso(button, false); // Finalizar descanso automáticamente
+        mostrarMensaje(
+          "¡La mascota ha descansado completamente! 🌟",
+          "success"
+        );
+      }
+    }, 1000);
   }
 
-  despertar() {
-    if (this.estado === "durmiendo") {
-      this.estado = "activo";
-      this.enDescanso = false;
+  terminarDescanso(button, cancelado) {
+    // Desbloquear acciones y descongelar stats
+    this.enDescanso = false;
+    this.congelarStats = false;
+    this.cambiarEstado("activo");
+    AudioController.play("menu");
+    this.actualizarAparienciaMascota();
 
-      AudioController.play("menu");
-      this.actualizarAparienciaMascota();
-      Pet.guardarEstado(this, this.misiones);
-      actualizarStats(this);
-      mostrarMensaje(
-        "La mascota ha terminado de descansar y está activa nuevamente.",
-        "success"
-      );
+    // Restaurar el botón al estado original
+    PetUIController.actualizarBoton(button, "😴 Descansar", () =>
+      this.descansar()
+    );
+
+    // Guardar el estado y actualizar los stats
+    Pet.guardarEstado(this, this.misiones);
+    actualizarStats(this);
+
+    // Mostrar mensaje si el descanso fue cancelado manualmente
+    if (cancelado) {
+      mostrarMensaje("El descanso ha sido cancelado. 🛑", "warning");
     }
   }
 
   reducirStats() {
+    if (this.congelarStats || this.estadoBloqueado()) return;
 
-    if (this.enJuego || this.enDescanso) return; // Stats blockeados mientras juega o descansa
-
-
-    this.energia = Math.max(this.energia - Math.floor(Math.random() * 4), 0);
-    this.felicidad = Math.max(
-      this.felicidad - Math.floor(Math.random() * 4),
-      0
+    this.energia = Math.max(
+      this.energia - Math.floor(Math.random() * valors.REDUCCION_MAXIMA),
+      valors.MIN_STAT
     );
-    this.higiene = Math.max(this.higiene - Math.floor(Math.random() * 4), 0);
+    this.felicidad = Math.max(
+      this.felicidad - Math.floor(Math.random() * valors.REDUCCION_MAXIMA),
+      valors.MIN_STAT
+    );
+    this.higiene = Math.max(
+      this.higiene - Math.floor(Math.random() * valors.REDUCCION_MAXIMA),
+      valors.MIN_STAT
+    );
 
-    this.verificarStats(); //verifica los umbrales
+    if (this.energia === valors.MIN_STAT) {
+      this.limpiar();
+      mostrarMensaje("La mascota está agotada y necesita descansar.", "error");
+    }
+
+    if (this.higiene < 10) {
+      mostrarMensaje("La mascota está sucia y necesita un baño.", "warning");
+    }
+
+    this.verificarStats(); // Verifica los umbrales
     Pet.guardarEstado(this, this.misiones);
     actualizarStats(this); // Actualizar los stats en el DOM
   }
 
+  congelarStatsDuranteAccion(accion, callback) {
+    if (this.congelarStats) return;
+
+    this.congelarStats = true;
+    accion();
+
+    setTimeout(() => {
+      this.congelarStats = false;
+      callback();
+    }, 1000);
+  }
+
   verificarStats() {
-    const estadoAnterior = this.estado;
-  
-    /* Efectos Negativos */
-    if (this.nivel >= 2 && this.energia === 0 && !this.enDescanso) {
-      this.estado = "agotado";
-      this.felicidad = Math.max(this.felicidad - 30, 0);
-      this.iniciarDescanso();
-    } else if (this.felicidad === 0) {
-      this.estado = "triste";
-      this.energia = Math.max(this.energia - 10, 0);
-    } else if (this.higiene === 0) {
-      this.estado = "sucio";
-      this.felicidad = Math.max(this.felicidad - 10, 0);
-    } else if (!this.enDescanso) {
-      this.estado = "activo";
-    }
-  
-    /* Efectos Positivos */
-    if (this.energia === 100) {
+    this.handleEstadosPositivos();
+    this.handleEstadosNegativos();
+  }
+
+  handleEstadosPositivos() {
+    if (this.energia === valors.MAX_STAT) {
       this.reproducirSonidoAlerta();
       mostrarMensaje(
         "¡Energía al máximo! La mascota está llena de energía.",
         "success"
       );
     }
-  
-    if (this.felicidad === 100) {
+
+    if (this.felicidad === valors.MAX_STAT) {
       this.reproducirSonidoAlerta();
       mostrarMensaje(
         "¡Felicidad al máximo! La mascota está muy feliz.",
         "success"
       );
     }
-  
-    if (this.higiene === 100) {
+
+    if (this.higiene === valors.MAX_STAT) {
       this.reproducirSonidoAlerta();
       mostrarMensaje(
         "¡Higiene al máximo! La mascota está completamente limpia.",
         "success"
       );
     }
-  
-    // Mostrar mensaje solo si el estado cambia
+  }
+
+  handleEstadosNegativos() {
+    const estadoAnterior = this.estado; // Guardar el estado actual antes de realizar cambios
+
+    if (this.energia === 0 && !this.enDescanso) {
+      this.estado = "agotado";
+      this.felicidad = Math.max(this.felicidad - 30, 0);
+      this.reproducirSonidoAlerta();
+    } else if (this.felicidad === 0) {
+      this.estado = "triste";
+      this.energia = Math.max(this.energia - 10, 0);
+      this.reproducirSonidoAlerta();
+    } else if (this.higiene === 0) {
+      this.estado = "sucio";
+      this.felicidad = Math.max(this.felicidad - 10, 0);
+      this.reproducirSonidoAlerta();
+    } else if (!this.enDescanso) {
+      this.estado = "activo";
+    }
+
+    // Mostrar mensaje solo si el estado ha cambiado
     if (estadoAnterior !== this.estado) {
       switch (this.estado) {
-        case "agotado":
-          this.reproducirSonidoAlerta();
-          mostrarMensaje(
-            "Tu mascota está muy agotada. Va a descansar. Dile Buenas Noches.",
-            "error"
-          );
-          break;
-        case "triste":
-          this.reproducirSonidoAlerta();
-          mostrarMensaje("La mascota está triste. Necesita jugar.", "warning");
-          break;
-        case "sucio":
-          this.reproducirSonidoAlerta();
-          mostrarMensaje("La mascota está sucia. Necesita un baño.", "warning");
-          break;
         case "activo":
           this.reproducirSonidoAlerta();
           mostrarMensaje(
@@ -269,23 +430,64 @@ export default class Pet {
             "success"
           );
           break;
+        case "agotado":
+          mostrarMensaje(
+            "Tu mascota está muy agotada. Va a descansar. Dile Buenas Noches.",
+            "error"
+          );
+          this.iniciarDescanso();
+          break;
+        case "triste":
+          mostrarMensaje("La mascota está triste. Necesita jugar.", "warning");
+          this.actualizarAparienciaMascota();
+          break;
+        case "sucio":
+          mostrarMensaje("La mascota está sucia. Necesita un baño.", "warning");
+          this.actualizarAparienciaMascota();
+          break;
       }
-  
-      // Actualizar la apariencia de la mascota después de cambiar el estado
-      this.actualizarAparienciaMascota();
     }
+  }
+
+  estadoBloqueado() {
+    return this.enDescanso || this.enJuego;
+  }
+
+  cambiarEstado(nuevoEstado) {
+    const estadosValidos = ["activo", "durmiendo", "duchandose", "jugando"];
+
+    if (!estadosValidos.includes(nuevoEstado)) {
+      console.error(`Estado inválido: ${nuevoEstado}`);
+      return false;
+    }
+
+    if (
+      this.estadoBloqueado() &&
+      nuevoEstado !== "durmiendo" &&
+      nuevoEstado !== "jugando"
+    ) {
+      console.warn(
+        "No se puede cambiar el estado mientras la mascota está ocupada."
+      );
+      return false;
+    }
+
+    this.estado = nuevoEstado;
+    console.log(`Estado cambiado a: ${nuevoEstado}`);
+    return true;
   }
 
   actualizarAparienciaMascota() {
     const mascotaImg = document.getElementById("mascota");
-  
+
     const skins = {
       activo: "../assets/images/pixels.png",
       triste: "../assets/images/pet_sad.png",
       sucio: "../assets/images/pet_dirty.png",
       durmiendo: "../assets/images/pet_sleep.png",
+      duchandose: "../assets/images/pet_ducha.png",
     };
-  
+
     mascotaImg.src = skins[this.estado] || "../assets/images/pixels.png";
   }
 
@@ -297,12 +499,19 @@ export default class Pet {
       nivelActual.misiones.forEach((mision) => {
         if (mision.id.startsWith(accion) && !mision.completado) {
           mision.progreso += 1;
-          if (mision.progreso == mision.meta) {
+          if (mision.progreso >= mision.meta) {
+            mision.progreso = mision.meta; // Asegurarse de que no exceda la meta
             mision.completado = true;
-            this.verificarNivel();
+            mostrarMensaje(
+              `¡Has completado la misión: ${mision.titulo}!`,
+              "success"
+            );
           }
         }
       });
+  
+      // Guardar el estado después de actualizar el progreso
+      Pet.guardarEstado(this, this.misiones);
     }
   }
 
@@ -316,7 +525,6 @@ export default class Pet {
     ) {
       this.nivel = nivelActual.recompensas.nivel;
       mostrarSubidaDeNivel(this.nivel, nivelActual.recompensas.desbloqueos);
-      this.mostrarBotones();
       this.cambiarJuegoSegunNivel();
     }
   }
@@ -333,45 +541,34 @@ export default class Pet {
     }
   }
 
-  mostrarBotones() {
-    let sleep = document.getElementById("descansar");
-
-    if (this.nivel >= 2) {
-      sleep.classList.remove("hidden");
-    } else {
-      console.log("Nivel insuficiente");
-    }
-  }
-
   agregarRecompensa(recompensa) {
     this.inventario.push(recompensa);
     Pet.guardarEstado(this, this.misiones);
   }
 
   iniciarDescanso() {
-    if (this.enDescanso) return; 
+    if (this.enDescanso) return;
     let img = document.getElementById("mascota");
-    this.estado = "durmiendo"; 
-    this.enDescanso = true; 
+    this.estado = "durmiendo";
+    this.enDescanso = true;
     AudioController.play("sleeping");
-  
-    this.actualizarAparienciaMascota(); 
-    const tiempoDescanso = 30000; 
-  
+
+    this.actualizarAparienciaMascota();
+    const tiempoDescanso = 30000;
+
     mostrarMensaje(
       `La mascota está descansando. Volverá a estar activa en ${
         tiempoDescanso / 1000
       } segundos.`,
-      "info"
+      "warning"
     );
-  
-    
+
     setTimeout(() => {
       this.enDescanso = false;
       this.energia = 50;
       this.estado = "activo";
       AudioController.play("menu");
-      this.actualizarAparienciaMascota(); 
+      this.actualizarAparienciaMascota();
       mostrarMensaje(
         "La mascota ha terminado de descansar y está activa nuevamente.",
         "success"

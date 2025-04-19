@@ -6,8 +6,8 @@
         "id": "alimentar_5",
         "titulo": "Alimenta a tu mascota I",
         "descripcion": "Tu Mascota esta hambrienta, alimentala 5 veces",
-        "meta": 5,
         "progreso": 0,
+        "meta": 5,
         "completado": false,
         "recompensa": 10
       },
@@ -15,8 +15,8 @@
         "id": "jugar_3",
         "titulo": "El juego de las Cartas",
         "descripcion": "Le ha llegado a tu mascota unas cartas de un amigo, juega con ella 3 veces",
-        "meta": 3,
         "progreso": 0,
+        "meta": 3,
         "completado": false,
         "recompensa": 10
       },
@@ -24,8 +24,8 @@
         "id": "duchar_2",
         "titulo": "Jabon y Agua",
         "descripcion": "Tu mascota esta sucia, dale una ducha",
-        "meta": 2,
         "progreso": 0,
+        "meta": 1,
         "completado": false,
         "recompensa": "Sombrero del Mago"
       }
@@ -33,7 +33,6 @@
     "recompensas": {
       "nivel": 2,
       "desbloqueos": [
-        "Cama de Madera",
         "Sombrero de Mago"
       ]
     }
@@ -45,17 +44,17 @@
         "id": "alimentar_10",
         "titulo": "Alimenta a tu mascota 10 veces",
         "descripcion": "Tu mascota esta hambrienta, alimentala 10 veces",
-        "meta": 10,
         "progreso": 0,
+        "meta": 10,
         "completado": false,
         "recompensa": 20
       },
       {
-        "id": "equipar_sombrero",
+        "id": "equipar_sombrero_del_mago",
         "titulo": "El Sombrero del Mago",
         "descripcion": "Tu mascota encontró un misterioso sombrero, le da curiosidad ponerselo",
-        "meta": 1,
         "progreso": 0,
+        "meta": 1,
         "completado": false,
         "recompensa": 15
       },
@@ -63,8 +62,8 @@
         "id": "descansar_3",
         "titulo": "Haz que tu mascota descanse 3 veces",
         "descripcion": "Tu mascota esta cansada, haz que descanse 3 veces",
-        "meta": 3,
         "progreso": 0,
+        "meta": 3,
         "completado": false,
         "recompensa": 10
       }
@@ -83,8 +82,8 @@
         "id": "alimentar_15",
         "titulo": "Alimenta a tu mascota 15 veces",
         "descripcion": "Tu mascota necesita más energía para seguir jugando, alimentala 15 veces.",
-        "meta": 15,
         "progreso": 0,
+        "meta": 15,
         "completado": false,
         "recompensa": 30
       },
@@ -92,8 +91,8 @@
         "id": "jugar_10",
         "titulo": "Juega con tu mascota 10 veces",
         "descripcion": "Tu mascota quiere jugar más, pasa tiempo con ella jugando 10 veces.",
-        "meta": 10,
         "progreso": 0,
+        "meta": 10,
         "completado": false,
         "recompensa": 25
       },
@@ -101,8 +100,8 @@
         "id": "duchar_5",
         "titulo": "Limpia a tu mascota 5 veces",
         "descripcion": "Tu mascota necesita estar limpia para estar feliz, dale 5 duchas.",
-        "meta": 5,
         "progreso": 0,
+        "meta": 5,
         "completado": false,
         "recompensa": 20
       },
@@ -110,8 +109,8 @@
         "id": "descansar_5",
         "titulo": "Haz que tu mascota descanse 5 veces",
         "descripcion": "Tu mascota necesita descansar más para recuperar energía, haz que descanse 5 veces.",
-        "meta": 5,
         "progreso": 0,
+        "meta": 5,
         "completado": false,
         "recompensa": 20
       }

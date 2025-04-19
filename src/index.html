@@ -33,7 +33,7 @@
         <button id="alimentar" title="Alimentar a tu mascota">🍎 Alimentar</button>
         <button id="jugar" title="Jugar con tu mascota">🎾 Jugar</button>
         <button id="duchar" title="Bañar a tu mascota" >🛁 Limpiar</button>
-        <button id="descansar" title="Descansar con tu mascota" class="hidden">😴 Descansar</button> 
+        <button id="descansar" title="Descansar con tu mascota" >😴 Descansar</button> 
         
     </div>
 
@@ -78,7 +78,7 @@
     <!---->
 
     <!--Modal Tutorial-->
-    <div id="tutorial-modal" class="">
+    <div id="tutorial-modal" class="hidden"> <!--hidden-->
         <div class="modal-content">
           <p id="tutorial-texto">¡Bienvenido a Meumon! </p>
           <button id="tutorial-siguiente" onclick="siguienteMensajeTutorial()">Siguiente</button>
@@ -90,6 +90,15 @@
     <div id="mensajes-container" class="mensajes-container"></div>
     <!---->
 
+
+    <!--Juego Candy-->
+    <div class="score-board hidden">
+        <h3 class="hidden">Score</h3>
+        <h1 id="score"></h1>
+      </div>
+      <div class="grid"></div>
+    
+    <!---->
     
     <script type="module" src="button.js"></script>
     <script type="module" src="logros.js"></script>
