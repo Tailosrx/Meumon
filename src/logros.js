@@ -3,32 +3,45 @@ import Pet from "./pet.js";
 import AudioController from "./audioController.js";
 import { añadirRecompensaAlInventario } from "./inventory.js";
 
-const equipables = ["Sombrero de Mago"]; //Array de items equipables
+const equipables = ["Sombrero de Mago"]; 
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    let misiones = JSON.parse(localStorage.getItem("misiones"));
+    let misiones = localStorage.getItem("misiones");
 
     // Si no hay misiones guardadas, realizar el fetch de las misiones predeterminadas
-    if (!misiones) {
+    if (!misiones || misiones === "[]") {
       const response = await fetch("./misiones.json");
       if (!response.ok) throw new Error("No se pudo cargar misiones.json");
       const misionesPredeterminadas = await response.json();
-      misiones = misionesPredeterminadas.niveles;
+      misiones = misionesPredeterminadas; // Asignar directamente el objeto completo
 
       // Guardar las misiones predeterminadas en el almacenamiento local
       localStorage.setItem("misiones", JSON.stringify(misiones));
+    } else {
+      try {
+        misiones = JSON.parse(misiones);
+      } catch (error) {
+        console.error("Error al analizar las misiones guardadas:", error);
+
+        // Si ocurre un error, cargar las misiones predeterminadas
+        const response = await fetch("./misiones.json");
+        if (!response.ok) throw new Error("No se pudo cargar misiones.json");
+        const misionesPredeterminadas = await response.json();
+        misiones = misionesPredeterminadas;
+
+        // Guardar las misiones predeterminadas en el almacenamiento local
+        localStorage.setItem("misiones", JSON.stringify(misiones));
+      }
     }
 
-    // Cargar el estado de la mascota
-    const mascota = Pet.cargarEstado();
+    const mascota = Pet.cargarEstado({ niveles: misiones });
 
-    // Actualizar la interfaz con las misiones y monedas
+
     actualizarMisiones(mascota, misiones);
     actualizarMonedas(mascota);
 
     AudioController.play("menu");
-
 
     document.getElementById("logros").addEventListener("click", (event) => {
       if (

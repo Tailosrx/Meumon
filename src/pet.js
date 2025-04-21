@@ -49,25 +49,36 @@ export default class Pet {
 
   static cargarEstado(misiones) {
     const mascota = new Pet();
-    const estadoGuardado = JSON.parse(localStorage.getItem("mascota"));
-    const misionesGuardadas = JSON.parse(localStorage.getItem("misiones"));
-
-    //mascota.misiones = misiones.niveles;
+    const estadoGuardado = localStorage.getItem("mascota");
+    const misionesGuardadas = localStorage.getItem("misiones");
+  
     if (estadoGuardado) {
-      Object.assign(mascota, estadoGuardado);
-
+      try {
+        Object.assign(mascota, JSON.parse(estadoGuardado));
+      } catch (error) {
+        console.error("Error al analizar el estado guardado:", error);
+      }
+  
       mascota.energia = Math.max(mascota.energia, 10);
       mascota.felicidad = Math.max(mascota.felicidad, 10);
       mascota.higiene = Math.max(mascota.higiene, 10);
-
+  
       mascota.enDescanso = false;
       mascota.congelarStats = false;
     }
-
-
-    
-
-    mascota.misiones = misionesGuardadas || misiones.niveles;
+  
+    try {
+      mascota.misiones = misionesGuardadas
+        ? JSON.parse(misionesGuardadas)
+        : misiones.niveles;
+    } catch (error) {
+      console.error("Error al analizar las misiones guardadas:", error);
+  
+      // Si ocurre un error, usar las misiones predeterminadas
+      mascota.misiones = misiones.niveles || [];
+      localStorage.setItem("misiones", JSON.stringify(mascota.misiones));
+    }
+  
     return mascota;
   }
 
@@ -318,9 +329,13 @@ export default class Pet {
       this.descansar()
     );
 
+    this.actualizarProgreso("descansar");
+    actualizarMisiones(this, this.misiones);
+
     // Guardar el estado y actualizar los stats
     Pet.guardarEstado(this, this.misiones);
     actualizarStats(this);
+    
 
     // Mostrar mensaje si el descanso fue cancelado manualmente
     if (cancelado) {
@@ -510,8 +525,9 @@ export default class Pet {
         }
       });
   
-      // Guardar el estado después de actualizar el progreso
       Pet.guardarEstado(this, this.misiones);
+
+      this.verificarNivel(); //Si ha subido de lvl 
     }
   }
 
