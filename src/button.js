@@ -64,19 +64,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("alimentar")?.addEventListener("click", (event) => {
             mascota.alimentar();
             actualizarStats(mascota);
-            Pet.guardarEstado(mascota, mascota.misiones); // Guardar el estado actualizado
+            Pet.guardarEstado(mascota, mascota.misiones); 
         });
 
         document.getElementById("jugar")?.addEventListener("click", () => {
             mascota.jugar();
             actualizarStats(mascota);
-            Pet.guardarEstado(mascota, mascota.misiones); // Guardar el estado actualizado
+            Pet.guardarEstado(mascota, mascota.misiones); 
         });
 
         document.getElementById("duchar")?.addEventListener("click", () => {
             mascota.limpiar();
             actualizarStats(mascota);
-            Pet.guardarEstado(mascota, mascota.misiones); // Guardar el estado actualizado
+            Pet.guardarEstado(mascota, mascota.misiones); 
         });
 
         document.getElementById("descansar")?.addEventListener("click", () => {
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 mascota.descansar();
             }
             actualizarStats(mascota);
-            Pet.guardarEstado(mascota, mascota.misiones); // Guardar el estado actualizado
+            Pet.guardarEstado(mascota, mascota.misiones); 
         });
 
         document.getElementById("icon-logo")?.addEventListener("click", () => {

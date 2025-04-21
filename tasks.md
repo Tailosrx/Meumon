@@ -12,7 +12,7 @@
     - [ ] Implementar un sistema de configuracion
     - [X] Progressive duchar/dormir
     - [X] Persistencia de Datos
-    - [?] Mejora en stats (si se ducha no puede dormirse)
+    - [X] Mejora en stats (si se ducha no puede dormirse)
     - [X] Volver a abrir el juego no esta la funcion dormir
     - [?] Tope 100 stats y no poder comer
     - [X] Mientras se juega block stats

@@ -119,6 +119,7 @@ export function iniciarJuegoMemoria(mascota, misiones) {
       }
 
       AudioController.play("menu");
+      mascota.congelarStats = false;
 
       Pet.guardarEstado(mascota, misiones);
 
