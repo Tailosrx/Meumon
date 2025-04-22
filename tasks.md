@@ -3,7 +3,7 @@
     - [X] Mejorar la UI del inventario
     - [X] Mostrar Ventana de subida de level
     - [X] Arreglar tema botones mision completada
-    - [ ] Pensar que juegos implementar
+    - [ ] Pensar que juegos implementar (cartas 1-4, candy crush 5-9, Atrapando items que caen 10-14)
     - [X] Meter los audios de estados
     - [ ] Meter audio de equipar/desequipar
     - [ ] Meter mas funcionalidades con los estados (si esta cansado automaticamente dormira,...)

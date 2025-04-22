@@ -1,8 +1,8 @@
 import { mostrarMensaje } from "./messageStat.js";
 import { completarMisionID } from "./logros.js";
 
-const equipables = ["Sombrero del Mago"]; // Lista de objetos equipables
-let personaje = { equipado: null }; // Objeto actualmente equipado
+const equipables = ["Sombrero del Mago"]; 
+let personaje = { equipado: null }; 
 
 export function añadirRecompensaAlInventario(recompensa) {
   if (recompensa == 10) return;
@@ -115,8 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const items = ["Manzana roja", "Pelota de Tenis", "Jabon de Ducha", "Cama de Madera"];
   items.forEach(añadirRecompensaAlInventario);
 
-  // Añadir un objeto equipable como ejemplo
-  añadirRecompensaAlInventario("Sombrero del Mago");
   const itemImage = document.getElementById("item-image");
   itemImage.src = ""; // No mostrar ninguna imagen por defecto
   itemImage.alt = "";

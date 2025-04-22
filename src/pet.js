@@ -29,6 +29,7 @@ export default class Pet {
     this.enJuego = false;
     this.congelarStats = false;
     this.mensajeMostrado = false;
+    this.mostrarMensajes = true;
 
     // Cargar el estado guardado
     const estadoGuardado = JSON.parse(localStorage.getItem("mascota"));
@@ -51,34 +52,34 @@ export default class Pet {
     const mascota = new Pet();
     const estadoGuardado = localStorage.getItem("mascota");
     const misionesGuardadas = localStorage.getItem("misiones");
-  
+
     if (estadoGuardado) {
       try {
         Object.assign(mascota, JSON.parse(estadoGuardado));
       } catch (error) {
         console.error("Error al analizar el estado guardado:", error);
       }
-  
+
       mascota.energia = Math.max(mascota.energia, 10);
       mascota.felicidad = Math.max(mascota.felicidad, 10);
       mascota.higiene = Math.max(mascota.higiene, 10);
-  
+
       mascota.enDescanso = false;
       mascota.congelarStats = false;
     }
-  
+
     try {
       mascota.misiones = misionesGuardadas
         ? JSON.parse(misionesGuardadas)
         : misiones.niveles;
     } catch (error) {
       console.error("Error al analizar las misiones guardadas:", error);
-  
+
       // Si ocurre un error, usar las misiones predeterminadas
       mascota.misiones = misiones.niveles || [];
       localStorage.setItem("misiones", JSON.stringify(mascota.misiones));
     }
-  
+
     return mascota;
   }
 
@@ -90,26 +91,32 @@ export default class Pet {
 
   alimentar() {
     if (this.enDescanso) {
-      mostrarMensaje(
-        "La mascota está descansando y no puede ser alimentada.",
-        "warning"
-      );
+      if (this.mostrarMensajes) {
+        mostrarMensaje(
+          "La mascota está descansando y no puede ser alimentada.",
+          "warning"
+        );
+      }
       return;
     }
 
     if (this.enJuego) {
-      mostrarMensaje(
-        "La mascota está jugando y no puede ser alimentada ahora.",
-        "warning"
-      );
+      if (this.mostrarMensajes) {
+        mostrarMensaje(
+          "La mascota está jugando y no puede ser alimentada ahora.",
+          "warning"
+        );
+      }
       return;
     }
 
     if (this.estadoBloqueado()) {
-      mostrarMensaje(
-        "La mascota está ocupada y no puede ser alimentada ahora.",
-        "warning"
-      );
+      if (this.mostrarMensajes) {
+        mostrarMensaje(
+          "La mascota está ocupada y no puede ser alimentada ahora.",
+          "warning"
+        );
+      }
       return;
     }
 
@@ -135,20 +142,26 @@ export default class Pet {
 
   jugar() {
     if (this.enDescanso) {
-      mostrarMensaje(
-        "La mascota está descansando y no puede jugar.",
-        "warning"
-      );
+      if (this.mostrarMensajes) {
+        mostrarMensaje(
+          "La mascota está descansando y no puede jugar.",
+          "warning"
+        );
+      }
       return;
     }
 
     if (this.estadoBloqueado()) {
-      mostrarMensaje(
-        "La mascota está ocupada y no puede jugar ahora.",
-        "warning"
-      );
+      if (this.mostrarMensajes) {
+        mostrarMensaje(
+          "La mascota está ocupada y no puede jugar ahora.",
+          "warning"
+        );
+      }
       return;
     }
+
+    if (this.congelarStats) return;
 
     this.enJuego = true;
     this.congelarStats = true;
@@ -158,7 +171,9 @@ export default class Pet {
 
     if (!this.cambiarEstado("jugando")) return;
 
-    mostrarMensaje("¡La mascota está jugando y divirtiéndose!", "success");
+    if (this.mostrarMensajes) {
+      mostrarMensaje("¡La mascota está jugando y divirtiéndose!", "success");
+    }
 
     iniciarJuegoMemoria(this, this.misiones);
 
@@ -335,12 +350,40 @@ export default class Pet {
     // Guardar el estado y actualizar los stats
     Pet.guardarEstado(this, this.misiones);
     actualizarStats(this);
-    
 
     // Mostrar mensaje si el descanso fue cancelado manualmente
     if (cancelado) {
       mostrarMensaje("El descanso ha sido cancelado. 🛑", "warning");
     }
+  }
+
+  descansoAutomatico() {
+    if (this.enDescanso) return;
+
+    this.enDescanso = true;
+    this.congelarStats = true;
+    this.cambiarEstado("durmiendo");
+    this.actualizarAparienciaMascota();
+    AudioController.play("sleeping");
+
+    mostrarMensaje(
+      "La mascota está agotada y necesita descansar. 💤",
+      "warning"
+    );
+
+    const intervaloDescanso = setInterval(() => {
+      this.energia = Math.min(
+        this.energia + valors.INCREMENTO_STAT,
+        valors.MAX_STAT
+      );
+      actualizarStats(this);
+
+      // Finalizar descanso automáticamente si la energía está al máximo
+      if (this.energia === valors.MAX_STAT) {
+        clearInterval(intervaloDescanso);
+        this.terminarDescansoAutomatico();
+      }
+    }, 1000);
   }
 
   reducirStats() {
@@ -359,8 +402,8 @@ export default class Pet {
       valors.MIN_STAT
     );
 
-    if (this.energia === valors.MIN_STAT) {
-      this.limpiar();
+    if (this.energia === valors.MIN_STAT && !this.enDescanso) {
+      this.descansoAutomatico();
       mostrarMensaje("La mascota está agotada y necesita descansar.", "error");
     }
 
@@ -524,10 +567,10 @@ export default class Pet {
           }
         }
       });
-  
+
       Pet.guardarEstado(this, this.misiones);
 
-      this.verificarNivel(); //Si ha subido de lvl 
+      this.verificarNivel(); //Si ha subido de lvl
     }
   }
 
@@ -535,13 +578,20 @@ export default class Pet {
     const nivelActual = this.misiones.find(
       (nivel) => nivel.nivel === this.nivel
     );
+
+    // Verificar si todas las misiones del nivel actual están completadas
     if (
       nivelActual &&
       nivelActual.misiones.every((mision) => mision.completado)
     ) {
-      this.nivel = nivelActual.recompensas.nivel;
-      mostrarSubidaDeNivel(this.nivel, nivelActual.recompensas.desbloqueos);
-      this.cambiarJuegoSegunNivel();
+      const nuevoNivel = nivelActual.recompensas.nivel;
+
+      // Asegurarse de que el nivel solo aumente y no retroceda
+      if (nuevoNivel > this.nivel) {
+        this.nivel = nuevoNivel;
+        mostrarSubidaDeNivel(this.nivel, nivelActual.recompensas.desbloqueos);
+        this.cambiarJuegoSegunNivel();
+      }
     }
   }
 

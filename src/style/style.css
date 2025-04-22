@@ -411,6 +411,7 @@ li {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
+    margin-top: 15%;
     gap: 10px;
 }
 

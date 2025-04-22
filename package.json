@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Mi aplicación de mascota en Electron",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tailosrx/Meumon.git"
+  },
   "build": {
     "publish": [
       {
