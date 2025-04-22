@@ -13,6 +13,8 @@ function createWindow() {
     const displays = screen.getAllDisplays();
     const externalDisplay = displays.find(display => display.bounds.x !== 0 || display.bounds.y !== 0);
 
+    log.info(`Version de Meumon: ${app.getVersion()}`);
+
     let windowOptions = {
         width: 800,
         height: 800,
