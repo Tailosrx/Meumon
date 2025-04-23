@@ -3,7 +3,7 @@ import Pet from "./pet.js";
 import AudioController from "./audioController.js";
 import { añadirRecompensaAlInventario } from "./inventory.js";
 
-const equipables = ["Sombrero de Mago"]; 
+const equipables = ["Sombrero del Mago"]; 
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Si no hay misiones guardadas, realizar el fetch de las misiones predeterminadas
     if (!misiones || misiones === "[]") {
+      console.log("Cargando misiones desde misiones.json");
       const response = await fetch("./misiones.json");
       if (!response.ok) throw new Error("No se pudo cargar misiones.json");
       const misionesPredeterminadas = await response.json();
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Guardar las misiones predeterminadas en el almacenamiento local
       localStorage.setItem("misiones", JSON.stringify(misiones));
     } else {
+      console.log("Cargando misiones desde localStorage");
       try {
         misiones = JSON.parse(misiones);
       } catch (error) {
@@ -35,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    const mascota = Pet.cargarEstado({ niveles: misiones });
+    const mascota = Pet.cargarEstado(misiones);
 
 
     actualizarMisiones(mascota, misiones);
@@ -114,54 +116,52 @@ export function actualizarMisiones(mascota, misiones) {
 export function completarMision(id, mascota, button, misiones) {
   console.log("Completando misión", id);
 
+  let misionEncontrada = null;
+  let nivelEncontrado = null;
+
   for (const nivel of misiones) {
     const mision = nivel.misiones.find((m) => m.id === id);
-    if (!mision || mision.completado) return;
-/*
-    if (mision.recompensa == 10) {
-      mascota.monedas += mision.recompensa;
-      actualizarMonedas(mascota);
-    } else if (equipables.includes(mision.recompensa)) {
-      // Si la recompensa es un objeto equipable
-      añadirRecompensaAlInventario(mision.recompensa);
-    } else {
-      añadirRecompensaAlInventario(mision.recompensa);
-    }*/
-
-
-      
-    switch (true) {
-      case mision.recompensa === 10:
-        mascota.monedas += mision.recompensa;
-        actualizarMonedas(mascota);
-      break;
-      case equipables.includes(mision.recompensa):
-      // Si la recompensa es un objeto equipable
-        añadirRecompensaAlInventario(mision.recompensa);
-      break;
-      default:
-        añadirRecompensaAlInventario(mision.recompensa);
-      break;
+    if (mision) {
+      misionEncontrada = mision;
+      nivelEncontrado = nivel;
+      break; // Misión encontrada, salimos del loop
     }
-    mision.completado = true;
-
-    // Hace un save en localStorage que esta misión fue reclamada
-    let misionesReclamadas =
-      JSON.parse(localStorage.getItem("misionesReclamadas")) || [];
-    misionesReclamadas.push(id);
-    localStorage.setItem(
-      "misionesReclamadas",
-      JSON.stringify(misionesReclamadas)
-    );
-
-    button.textContent = "Reclamado";
-    button.disabled = true;
-    button.classList.add("endMission");
-
-    // hace un save del estado
-    Pet.guardarEstado(mascota, misiones);
-    break;
   }
+
+  if (!misionEncontrada) {
+    console.error(`La misión con ID ${id} no se encontró.`);
+    return;
+  }
+
+  const mision = misionEncontrada;
+
+  if (typeof mision.recompensa === "number") {
+    mascota.monedas += mision.recompensa;
+    actualizarMonedas(mascota);
+  } else if (equipables.includes(mision.recompensa)) {
+    añadirRecompensaAlInventario(mision.recompensa);
+  } else {
+    añadirRecompensaAlInventario(mision.recompensa);
+  }
+
+  mision.completado = true;
+
+  // Guardar como reclamada
+  let misionesReclamadas =
+    JSON.parse(localStorage.getItem("misionesReclamadas")) || [];
+  misionesReclamadas.push(id);
+  localStorage.setItem(
+    "misionesReclamadas",
+    JSON.stringify(misionesReclamadas)
+  );
+
+  button.textContent = "Reclamado";
+  button.disabled = true;
+  button.classList.add("endMission");
+
+  // Guardar estado
+  Pet.guardarEstado(mascota, misiones);
+  actualizarMisiones(mascota, misiones);
 }
 
 export function completarMisionID(id) {

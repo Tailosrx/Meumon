@@ -59,20 +59,19 @@
         "recompensa": "Sombrero del Mago"
       },
       {
-        "id": "equipar_sombrero_del_mago",
-        "titulo": "El Sombrero del Mago",
-        "descripcion": "Tu mascota encontró un misterioso sombrero, le da curiosidad ponerselo",
+        "id": "jugar_10",
+        "titulo": "Juega con tu mascota 10 veces",
+        "descripcion": "Tu mascota quiere jugar más, pasa tiempo con ella jugando 10 veces.",
         "progreso": 0,
-        "meta": 1,
+        "meta": 10,
         "completado": false,
-        "recompensa": 15
+        "recompensa": 25
       }
     ],
     "recompensas": {
       "nivel": 3,
       "desbloqueos": [
-        "Paleta Aquatico",
-        "Sombrero del Mago"
+        "Paleta Aquatico"
       ]
     }
   },
@@ -89,15 +88,6 @@
         "recompensa": 30
       },
       {
-        "id": "jugar_10",
-        "titulo": "Juega con tu mascota 10 veces",
-        "descripcion": "Tu mascota quiere jugar más, pasa tiempo con ella jugando 10 veces.",
-        "progreso": 0,
-        "meta": 10,
-        "completado": false,
-        "recompensa": 25
-      },
-      {
         "id": "limpiar_5",
         "titulo": "Limpia a tu mascota 5 veces",
         "descripcion": "Tu mascota necesita estar limpia para estar feliz, dale 5 duchas.",
@@ -105,6 +95,15 @@
         "meta": 5,
         "completado": false,
         "recompensa": 20
+      },
+      {
+        "id": "equipar_sombrero_del_mago",
+        "titulo": "El Sombrero del Mago",
+        "descripcion": "Tu mascota encontró un misterioso sombrero, le da curiosidad ponerselo",
+        "progreso": 0,
+        "meta": 1,
+        "completado": false,
+        "recompensa": 15
       },
       {
         "id": "descansar_5",

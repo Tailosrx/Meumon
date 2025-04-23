@@ -4,6 +4,7 @@ import { iniciarJuegoMemoria } from "./games/memory.js";
 import { mostrarMensaje } from "./messageStat.js";
 import AudioController from "./audioController.js";
 import PetUIController from "./petUIController.js";
+import { añadirRecompensaAlInventario } from "./inventory.js";
 
 const valors = {
   MAX_STAT: 100,
@@ -71,12 +72,12 @@ export default class Pet {
     try {
       mascota.misiones = misionesGuardadas
         ? JSON.parse(misionesGuardadas)
-        : misiones.niveles;
+        : misiones;
     } catch (error) {
       console.error("Error al analizar las misiones guardadas:", error);
 
       // Si ocurre un error, usar las misiones predeterminadas
-      mascota.misiones = misiones.niveles || [];
+      mascota.misiones = misiones || [];
       localStorage.setItem("misiones", JSON.stringify(mascota.misiones));
     }
 
@@ -235,17 +236,17 @@ export default class Pet {
     button.textContent = "🛁 Cancelar ducha";
 
     const intervaloDucha = setInterval(() => {
-      this.higiene = Math.min(
-        this.higiene + 10, // Incrementar higiene
-        valors.MAX_STAT
-      );
+      this.higiene = Math.min(this.higiene + 10, valors.MAX_STAT);
       actualizarStats(this);
-
+    
       if (this.higiene === valors.MAX_STAT) {
         clearInterval(intervaloDucha);
+    
+        this.actualizarProgreso("limpiar"); // 👈 AQUI SE ACTUALIZA EL PROGRESO
+    
         this.terminarDucha(shower, button);
         mostrarMensaje("¡La mascota está completamente limpia!", "success");
-
+    
         // Restablecer estados
         this.enDescanso = false;
         this.congelarStats = false;
@@ -255,7 +256,7 @@ export default class Pet {
         actualizarMisiones(this, this.misiones);
       }
     }, 1000);
-
+    
     button.onclick = () => {
       clearInterval(intervaloDucha);
       this.terminarDucha(shower, button);
@@ -281,6 +282,7 @@ export default class Pet {
     button.onclick = () => this.limpiar(); // Restaurar el evento original
 
     this.actualizarAparienciaMascota();
+    this.actualizarProgreso("limpiar");
 
     Pet.guardarEstado(this, this.misiones);
     actualizarStats(this);
@@ -403,7 +405,7 @@ export default class Pet {
     );
 
     if (this.energia === valors.MIN_STAT && !this.enDescanso) {
-      this.descansoAutomatico();
+      descansoAutomatico();
       mostrarMensaje("La mascota está agotada y necesita descansar.", "error");
     }
 
@@ -585,6 +587,12 @@ export default class Pet {
       nivelActual.misiones.every((mision) => mision.completado)
     ) {
       const nuevoNivel = nivelActual.recompensas.nivel;
+
+      if (this.nivel === 3) {
+        añadirRecompensaAlInventario("Paleta Acuática");
+        mostrarMensaje("¡Has desbloqueado la Paleta Acuática! 🌊", "success");
+      }
+      
 
       // Asegurarse de que el nivel solo aumente y no retroceda
       if (nuevoNivel > this.nivel) {

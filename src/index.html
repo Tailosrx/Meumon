@@ -1,111 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="mascota-nombre">Mi Mascota</title>
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="icon" href="../assets/images/pixels.png" type="image/x-icon">
-</head>
-<body>
+    <link rel="stylesheet" href="style/style.css" />
+    <link rel="icon" href="../assets/images/pixels.png" type="image/x-icon" />
+  </head>
+  <body>
     <section id="misiones-container">
-        <h2 class="lvl-title">Misiones</h2>
-        <ul id="logros"></ul>
+      <h2 class="lvl-title">Misiones</h2>
+      <ul id="logros"></ul>
     </section>
 
     <div id="game-container">
-        <h1>Mi Mascota</h1>
-        <div class="coins">
-            <span class="stat">💰 <span id="monedas"></span></span> 
-        </div>
-        <img id="icon-logo" src="../assets/images/logo.png" alt="Seccion de Logros" title="Ir a la sección de logros">
-        <img id="icon-shop" src="../assets/images/inventory.png" alt="Tienda" title="Ir a la tienda">
-        <!--<img id="icon-tutorial" src="../assets/images/tutorial.png" alt="Tutorial" title="Ver tutoriales">-->
-        <img id="mascota" src="../assets/images/pixels.png" alt="Tamagotchi" width="200" title="Tu mascota virtual">
-        <div id="stats">
-            <span class="stat" title="Energía">💤 <span id="energia"></span></span>
-            <span class="stat" title="Felicidad">😊 <span id="felicidad"></span></span>
-            <span class="stat" title="Higiene">🛁 <span id="higiene"></span></span>
-            <span class="stat" title="Nivel">🏆 <span id="nivel"></span></span>
-        </div>
+      <h1>Mi Mascota</h1>
+      <div class="coins">
+        <span class="stat">💰 <span id="monedas"></span></span>
+      </div>
+      <img
+        id="icon-logo"
+        src="../assets/images/logo.png"
+        alt="Seccion de Logros"
+        title="Ir a la sección de logros"
+      />
+      <img
+        id="icon-shop"
+        src="../assets/images/inventory.png"
+        alt="Tienda"
+        title="Ir a la tienda"
+      />
+      <!--<img id="icon-tutorial" src="../assets/images/tutorial.png" alt="Tutorial" title="Ver tutoriales">-->
+      <img
+        id="mascota"
+        src="../assets/images/pixels.png"
+        alt="Tamagotchi"
+        width="200"
+        title="Tu mascota virtual"
+      />
+      <div id="stats">
+        <span class="stat" title="Energía">💤 <span id="energia"></span></span>
+        <span class="stat" title="Felicidad"
+          >😊 <span id="felicidad"></span
+        ></span>
+        <span class="stat" title="Higiene">🛁 <span id="higiene"></span></span>
+        <span class="stat" title="Nivel">🏆 <span id="nivel"></span></span>
+      </div>
 
-        
-        <button id="alimentar" title="Alimentar a tu mascota">🍎 Alimentar</button>
-        <button id="jugar" title="Jugar con tu mascota">🎮 Jugar</button>
-        <button id="duchar" title="Bañar a tu mascota" >🛁 Limpiar</button>
-        <button id="descansar" title="Descansar con tu mascota" >😴 Descansar</button> 
-        
+      <button id="alimentar" title="Alimentar a tu mascota">
+        🍎 Alimentar
+      </button>
+      <button id="jugar" title="Jugar con tu mascota">🎮 Jugar</button>
+      <button id="duchar" title="Bañar a tu mascota">🛁 Limpiar</button>
+      <button id="descansar" title="Descansar con tu mascota">
+        😴 Descansar
+      </button>
     </div>
 
     <!--Inventario-->
     <div id="inventory-container" class="hidden">
-        <button id="close-inventory" title="Cerrar Inventario">X</button>
-        <h2 id="title-inventory">Mi Inventario</h2>
-        <div id="inventory-grid">
-        </div>
-        <div id="item-details">
-            <h2 id="item-name"></h2>
-            <img id="item-image" src="" alt="Item Image">
-            <p id="item-description"></p>
-            <button id="equip-button" style="display: none;">Equipar</button>
-          </div>
+      <button id="close-inventory" title="Cerrar Inventario">X</button>
+      <h2 id="title-inventory">Mi Inventario</h2>
+      <div id="inventory-grid"></div>
+      <div id="item-details">
+        <h2 id="item-name"></h2>
+        <img id="item-image" src="" alt="Item Image" />
+        <p id="item-description"></p>
+        <button id="equip-button" style="display: none">Equipar</button>
+      </div>
     </div>
     <!---->
     <!--Logros-->
     <div id="logros-container" class="hidden">
-        <button id="close-logros" title="Cerrar Logros">X</button>
-        <h2 id="title-logros">Mis Logros</h2>
-        <div id="logros-grid">
-        </div>
-        <div id="logro-selected">
-            <h3 id="logro-name"></h3>
-            <img id="logro-image" src="../assets/images/fondo.png" alt="Imagen del logro">
-            <p id="logro-description"></p>
-        </div>
+      <button id="close-logros" title="Cerrar Logros">X</button>
+      <h2 id="title-logros">Mis Logros</h2>
+      <div id="logros-grid"></div>
+      <div id="logro-selected">
+        <h3 id="logro-name"></h3>
+        <img
+          id="logro-image"
+          src="../assets/images/fondo.png"
+          alt="Imagen del logro"
+        />
+        <p id="logro-description"></p>
+      </div>
     </div>
     <!---->
-    
 
     <!--Modal lvl-->
     <div id="nivelUpModal" class="hidden">
-        <div id="modal-content">
-            <h2 id="nuevoNivel"></h2>
-            <p>Has desbloqueado: </p>
-            <ul id="desbloqueos"></ul>
-            <button id="closeModal">Aceptar</button>
-        </div>
+      <div id="modal-content">
+        <h2 id="nuevoNivel"></h2>
+        <p>Has desbloqueado:</p>
+        <ul id="desbloqueos"></ul>
+        <button id="closeModal">Aceptar</button>
+      </div>
     </div>
     <!---->
 
     <!--Modal Tutorial-->
-    <div id="tutorial-modal" class="hidden"> <!--hidden-->
-        <div class="modal-content">
-          <p id="tutorial-texto">¡Bienvenido a Meumon! </p>
-          <button id="tutorial-siguiente" onclick="siguienteMensajeTutorial()">Siguiente</button>
-        </div>
+    <div id="tutorial-modal" class="hidden">
+      <!--hidden-->
+      <div class="modal-content">
+        <p id="tutorial-texto">¡Bienvenido a Meumon!</p>
+        <button id="tutorial-siguiente" onclick="siguienteMensajeTutorial()">
+          Siguiente
+        </button>
       </div>
+    </div>
     <!---->
 
     <!--Mensaje de Estado-->
     <div id="mensajes-container" class="mensajes-container"></div>
     <!---->
 
-
     <!--Juego Candy-->
     <div class="score-board hidden">
-        <h3 class="hidden">Score</h3>
-        <h1 id="score"></h1>
-      </div>
-      <div class="grid"></div>
-    
+      <h3 class="hidden">Score</h3>
+      <h1 id="score"></h1>
+    </div>
+    <div class="grid"></div>
+
     <!---->
-    
+
     <script type="module" src="button.js"></script>
     <script type="module" src="logros.js"></script>
     <script type="module" src="tutorial.js"></script>
     <script type="module" src="inventory.js"></script>
     <script type="module" src="games/memory.js"></script>
+
     
-   
-</body>
+  </body>
 </html>
