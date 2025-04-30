@@ -1,24 +1,22 @@
 import Pet from "../pet.js";
 import AudioController from "../audioController.js";
 
-export function iniciarJuegoMemoria(mascota, misiones) {
-  // Ocultar el contenedor original
+export function iniciarJuegoMemoria(mascota, misiones, modoDesafio = false) {
   const gameContainer = document.getElementById("game-container");
   gameContainer.style.display = "none";
 
-  // Crear un nuevo contenedor para el juego de memoria
   const newGameContainer = document.createElement("div");
   newGameContainer.id = "game-container-memory";
   newGameContainer.innerHTML = `
-        <h2>Juego de Memoria</h2>
-        <div id="memory-game" class="memory-game">
-            <!-- Cartas generadas aquí -->
-        </div>
-    `;
+    <h2>Juego de Memoria</h2>
+    ${
+      modoDesafio
+        ? '<p id="timer" style="font-size: 1.2rem;">Tiempo restante: 60s</p>'
+        : ""
+    }
+    <div id="memory-game" class="memory-game"></div>
+  `;
 
-
-
-  // Insertar el nuevo contenedor en el DOM
   document.body.appendChild(newGameContainer);
 
   const cardImages = [
@@ -32,31 +30,62 @@ export function iniciarJuegoMemoria(mascota, misiones) {
     "img4.png",
   ];
 
-  cardImages.sort(() => Math.random() - 0.5);
+  const cardImagesChallenge = [
+    "img1.png",
+    "img2.png",
+    "img3.png",
+    "img4.png",
+    "img5.png",
+    "img6.png",
+    "img1.png",
+    "img2.png",
+    "img3.png",
+    "img4.png",
+    "img5.png",
+    "img6.png",
+  ];
+
+  const selectedImages = modoDesafio ? cardImagesChallenge : cardImages;
+  selectedImages.sort(() => Math.random() - 0.5);
 
   const memoryGame = document.getElementById("memory-game");
 
-  cardImages.forEach((image) => {
+  selectedImages.forEach((image) => {
     const card = document.createElement("div");
     card.classList.add("memory-card");
     card.dataset.image = image;
-
     card.innerHTML = `
-            <div class="card-inner">
-                <div class="card-front" style="background-image: url('../assets/images/${image}')"></div>
-                <div class="card-back" style="background-image: url('../assets/images/back.png')"></div>
-            </div>
-        `;
-
+      <div class="card-inner">
+        <div class="card-front" style="background-image: url('../assets/images/${image}')"></div>
+        <div class="card-back" style="background-image: url('../assets/images/back.png')"></div>
+      </div>
+    `;
     memoryGame.appendChild(card);
   });
 
   let hasFlippedCard = false;
-  let lockBoard = false;
+  let lockBoard = false; 
   let firstCard, secondCard;
+  let timerInterval;
+  let timeLeft = 50;
 
   const wrongSound = new Audio("../assets/sound/wrong.mp3");
   const correctSound = new Audio("../assets/sound/correct.mp3");
+
+  function iniciarTimer() {
+    const timerElem = document.getElementById("timer");
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      timerElem.textContent = `Tiempo restante: ${timeLeft}s`;
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        AudioController.play("menu");
+        alert("¡Tiempo agotado! No has completado el desafío.");
+        finalizarJuego();
+      }
+    }, 1000);
+  }
 
   function flipCard() {
     if (lockBoard || this.classList.contains("flip")) return;
@@ -74,8 +103,7 @@ export function iniciarJuegoMemoria(mascota, misiones) {
   }
 
   function checkForMatch() {
-    let isMatch = firstCard.dataset.image === secondCard.dataset.image;
-
+    const isMatch = firstCard.dataset.image === secondCard.dataset.image;
     isMatch ? disableCards() : unflipCards();
   }
 
@@ -83,7 +111,6 @@ export function iniciarJuegoMemoria(mascota, misiones) {
     firstCard.removeEventListener("click", flipCard);
     secondCard.removeEventListener("click", flipCard);
     correctSound.play();
-
     resetBoard();
     checkForCompletion();
   }
@@ -111,33 +138,30 @@ export function iniciarJuegoMemoria(mascota, misiones) {
     );
 
     if (allFlipped) {
+      if (modoDesafio) clearInterval(timerInterval);
+
       alert("¡Has completado el juego de memoria!");
-
-      if (!misiones) {
-        console.error("Error: Las misiones no están definidas");
-        return;
-      }
-
       AudioController.play("menu");
       mascota.congelarStats = false;
 
       Pet.guardarEstado(mascota, misiones);
-
-      setTimeout(() => {
-        //window.location.href = "./index.html";
-
-        const memoryGameContainer = document.getElementById(
-          "game-container-memory"
-        );
-        memoryGameContainer.remove(); // Eliminar el contenedor del juego de memoria
-
-        const gameContainer = document.getElementById("game-container");
-        gameContainer.style.display = "flex";
-      }, 500);
+      finalizarJuego();
     }
+  }
+
+  function finalizarJuego() {
+    const memoryGameContainer = document.getElementById(
+      "game-container-memory"
+    );
+    if (memoryGameContainer) memoryGameContainer.remove();
+
+    const gameContainer = document.getElementById("game-container");
+    if (gameContainer) gameContainer.style.display = "flex";
   }
 
   document
     .querySelectorAll(".memory-card")
     .forEach((card) => card.addEventListener("click", flipCard));
+
+  if (modoDesafio) iniciarTimer();
 }

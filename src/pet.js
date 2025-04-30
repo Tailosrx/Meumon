@@ -43,7 +43,7 @@ export default class Pet {
 
   reproducirSonidoAlerta() {
     const sonidoAlerta = new Audio("../assets/sound/alert.wav");
-    sonidoAlerta.volume = 0.3; // Ajustar el volumen del sonido
+    sonidoAlerta.volume = 0.3; 
     sonidoAlerta.play().catch((error) => {
       console.error("Error al reproducir el sonido de alerta:", error);
     });
@@ -64,6 +64,7 @@ export default class Pet {
       mascota.energia = Math.max(mascota.energia, 10);
       mascota.felicidad = Math.max(mascota.felicidad, 10);
       mascota.higiene = Math.max(mascota.higiene, 10);
+      mascota.nivel = 3;
 
       mascota.enDescanso = false;
       mascota.congelarStats = false;
@@ -176,7 +177,7 @@ export default class Pet {
       mostrarMensaje("¡La mascota está jugando y divirtiéndose!", "success");
     }
 
-    iniciarJuegoMemoria(this, this.misiones);
+    this.cambiarJuegoSegunNivel();
 
     this.actualizarProgreso("jugar");
 
@@ -588,24 +589,36 @@ export default class Pet {
     ) {
       const nuevoNivel = nivelActual.recompensas.nivel;
 
-      if (this.nivel === 3) {
-        añadirRecompensaAlInventario("Paleta Acuática");
-        mostrarMensaje("¡Has desbloqueado la Paleta Acuática! 🌊", "success");
-      }
+     
       
 
       // Asegurarse de que el nivel solo aumente y no retroceda
       if (nuevoNivel > this.nivel) {
         this.nivel = nuevoNivel;
         mostrarSubidaDeNivel(this.nivel, nivelActual.recompensas.desbloqueos);
-        this.cambiarJuegoSegunNivel();
+
+
+
+        if (this.nivel === 2) {
+          añadirRecompensaAlInventario("Capa de Invisibilidad");
+          mostrarMensaje("¡Has desbloqueado la Capa de Invisibilidad! 🦸‍♂️", "success")
+          localStorage.setItem("inventarioDesbloqueado", "Capa de Invisibilidad");
+        }
+  
+  
+        if (this.nivel === 1) {
+          añadirRecompensaAlInventario("Paleta Acuática");
+          mostrarMensaje("¡Has desbloqueado la Paleta Acuática! 🌊", "success");
+          localStorage.setItem("inventarioDesbloqueado", "Paleta Acuática");
+        }
       }
     }
   }
 
   cambiarJuegoSegunNivel() {
-    if (this.nivel >= 3 && this.nivel < 6) {
-      iniciarJuegoMemoria(this);
+    if (this.nivel < 6) {
+      const modoDesafio = this.nivel === 5;
+      iniciarJuegoMemoria(this, this.misiones, modoDesafio);
     } else if (this.nivel >= 6 && this.nivel < 9) {
       // Lógica para iniciar el juego de atrapar la pelota
     } else if (this.nivel >= 9 && this.nivel < 10) {

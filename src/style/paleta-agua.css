@@ -210,7 +210,7 @@ button:active {
 }
 
 button:hover {
-    background-color: #21a1f1;
+    background-color: #f1c021 !important;
 }
 
 #stats {

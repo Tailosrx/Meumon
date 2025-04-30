@@ -33,7 +33,7 @@
     "recompensas": {
       "nivel": 2,
       "desbloqueos": [
-        
+       
       ]
     }
   },
@@ -71,7 +71,7 @@
     "recompensas": {
       "nivel": 3,
       "desbloqueos": [
-        "Paleta Aquatico"
+        "Paleta Acuática"
       ]
     }
   },
@@ -86,15 +86,6 @@
         "meta": 15,
         "completado": false,
         "recompensa": 30
-      },
-      {
-        "id": "limpiar_5",
-        "titulo": "Limpia a tu mascota 5 veces",
-        "descripcion": "Tu mascota necesita estar limpia para estar feliz, dale 5 duchas.",
-        "progreso": 0,
-        "meta": 5,
-        "completado": false,
-        "recompensa": 20
       },
       {
         "id": "equipar_sombrero_del_mago",
@@ -118,8 +109,45 @@
     "recompensas": {
       "nivel": 4,
       "desbloqueos": [
-        "Capa de Invisibilidad",
-        "Sombrero de Explorador"
+         "Capa de Invisibilidad"
+      ]
+    }
+  },
+  {
+    "nivel": 4,
+    "misiones": [
+      {
+        "id": "limpiar_5",
+        "titulo": "Limpia a tu mascota 5 veces",
+        "descripcion": "Tu mascota necesita estar limpia para estar feliz, dale 5 duchas.",
+        "progreso": 0,
+        "meta": 5,
+        "completado": false,
+        "recompensa": 20
+      },
+      {
+        "id": "equipar_paleta_acuatica",
+        "titulo": "Un look diferente",
+        "descripcion": "Tu mascota esta aburrida, dale un look maritimo",
+        "progreso": 0,
+        "meta": 1,
+        "completado": false,
+        "recompensa": 15
+      },
+      {
+        "id": "alimentar_4",
+        "titulo": "Haz que tu mascota descanse 5 veces",
+        "descripcion": "Tu mascota necesita descansar más para recuperar energía, haz que descanse 5 veces.",
+        "progreso": 0,
+        "meta": 4,
+        "completado": false,
+        "recompensa": 20
+      }
+    ],
+    "recompensas": {
+      "nivel": 5,
+      "desbloqueos": [
+        
       ]
     }
   }

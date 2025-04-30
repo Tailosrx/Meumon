@@ -1,11 +1,17 @@
 import { mostrarMensaje } from "./messageStat.js";
 import { completarMisionID } from "./logros.js";
 
-const equipables = ["Sombrero del Mago"]; 
-let personaje = { equipado: null }; 
+const equipables = [
+  "Sombrero del Mago",
+  "Paleta Acuática",
+  "Capa de Invisibilidad",
+];
+let personaje = { equipado: localStorage.getItem("equipoActual") || null };
+let inventarioDesbloqueado =
+  JSON.parse(localStorage.getItem("inventarioDesbloqueado")) || [];
 
 export function añadirRecompensaAlInventario(recompensa) {
-  if (recompensa == 10) return;
+  if (typeof recompensa === "number") return;
 
   const inventoryGrid = document.getElementById("inventory-grid");
 
@@ -15,7 +21,6 @@ export function añadirRecompensaAlInventario(recompensa) {
   );
   if (existe) return;
 
-  // Crear el elemento del objeto
   const itemDiv = document.createElement("div");
   itemDiv.textContent = recompensa;
   itemDiv.className = "inventory-item";
@@ -46,26 +51,43 @@ export function añadirRecompensaAlInventario(recompensa) {
   });
 
   inventoryGrid.appendChild(itemDiv);
+
+  if (!inventarioDesbloqueado.includes(recompensa)) {
+    inventarioDesbloqueado.push(recompensa);
+    localStorage.setItem(
+      "inventarioDesbloqueado",
+      JSON.stringify(inventarioDesbloqueado)
+    );
+  }
 }
 
 function toggleEquip(recompensa) {
-  if (personaje.equipado === recompensa) {
-    // Desequipar el objeto
-    personaje.equipado = null;
-    mostrarMensaje(`Desequipaste ${recompensa}`, "info");
-  } else {
-    // Equipar el objeto
-    personaje.equipado = recompensa;
-    mostrarMensaje(`Equipaste ${recompensa}`, "success");
+  let soundEquip = new Audio("../assets/sound/item.wav");
+  soundEquip.play();
 
-    // Delegar la lógica de completar la misión al módulo de logros
+  if (personaje.equipado === recompensa) {
+    personaje.equipado = null;
+    localStorage.removeItem("equipoActual");
+    mostrarMensaje(`Desequipaste ${recompensa}`, "info");
+  
+    if (esPaletaVisual(recompensa)) {
+      eliminarTema(); // <- vuelve al estilo por defecto
+    }
+  
+  } else {
+    personaje.equipado = recompensa;
+    localStorage.setItem("equipoActual", recompensa);
+    mostrarMensaje(`Equipaste ${recompensa}`, "success");
+  
+    if (esPaletaVisual(recompensa)) {
+      aplicarTema("agua");
+    }
+    
+  
     completarMisionID(`equipar_${recompensa.toLowerCase().replace(/ /g, "_")}`);
   }
 
-  // Actualizar la apariencia de la mascota
   actualizarAparienciaMascota();
-
-  // Actualizar el botón de equipar/desequipar
   actualizarInventario();
 }
 
@@ -89,13 +111,21 @@ function actualizarAparienciaMascota() {
 
   const skins = {
     "Sombrero del Mago": "../assets/images/pet_hat.png",
+    "Capa de Invisibilidad": "../assets/images/pixels.png", // Mantiene sprite base
   };
 
   if (personaje.equipado) {
-    // Verificar si el ítem tiene una apariencia específica
     mascotaImg.src = skins[personaje.equipado] || "../assets/images/pixels.png";
+
+    // Aplica efecto de invisibilidad solo si se equipó la capa
+    if (personaje.equipado === "Capa de Invisibilidad") {
+      mascotaImg.classList.add("invisible-effect");
+    } else {
+      mascotaImg.classList.remove("invisible-effect");
+    }
   } else {
     mascotaImg.src = "../assets/images/pixels.png"; // Imagen por defecto
+    mascotaImg.classList.remove("invisible-effect");
   }
 }
 
@@ -106,14 +136,63 @@ function obtenerDescripcion(recompensa) {
     "Jabon de Ducha": "Un jabón lleno de gel.", // Jabón para ducharse (aumenta limpieza 100)
     "Cama de Madera": "Una cama de madera para descansar.", // Cama para dormir (aumenta energía 100)
     "Sombrero del Mago": "Un sombrero de un mago verde olvidado.", // Puramente estético
+    "Paleta Acuática": "Dale un estilo maritimo.",
+    "Capa de Invisibilidad": "Una capa que desaparece quien se lo pone", // Efecto invisible
   };
 
   return descripciones[recompensa] || "Un objeto misterioso.";
 }
 
+function aplicarTema(nombreTema) {
+  eliminarTema();
+
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.id = "tema-actual";
+  link.href = `../src/style/paleta-${nombreTema}.css`; // ← nombreTema debe ser "agua"
+  document.head.appendChild(link);
+
+  localStorage.setItem("temaActivo", nombreTema);
+}
+
+
+
+function eliminarTema() {
+  const temaActual = document.getElementById("tema-actual");
+  if (temaActual) {
+    temaActual.remove();
+    localStorage.removeItem("temaActivo");
+  }
+}
+
+function esPaletaVisual(nombre) {
+  return nombre.startsWith("Paleta");
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
-  const items = ["Manzana roja", "Pelota de Tenis", "Jabon de Ducha", "Cama de Madera"];
+  const inventoryGrid = document.getElementById("inventory-grid");
+
+  const temaGuardado = localStorage.getItem("temaActivo");
+  if (temaGuardado) {
+    aplicarTema(temaGuardado);
+  }
+
+  // Cargar inventario guardado
+  const items =
+    inventarioDesbloqueado.length > 0
+      ? inventarioDesbloqueado
+      : [
+          "Manzana roja",
+          "Pelota de Tenis",
+          "Jabon de Ducha",
+          "Cama de Madera",
+          "Paleta Acuática",
+        ];
+
   items.forEach(añadirRecompensaAlInventario);
+
+  actualizarAparienciaMascota();
 
   const itemImage = document.getElementById("item-image");
   itemImage.src = ""; // No mostrar ninguna imagen por defecto

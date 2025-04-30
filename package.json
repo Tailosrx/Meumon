@@ -1,6 +1,6 @@
 {
   "name": "Meumon",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Mi aplicación de mascota en Electron",
   "main": "main.js",
   "repository": {

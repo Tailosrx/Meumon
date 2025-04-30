@@ -1,0 +1,517 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Fredoka One', cursive;
+    text-align: center;
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100vh;
+}
+
+h1 {
+    color: #71799e;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.lvl-title{
+    color: #71799e;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+
+.hidden{
+    display: none;
+}
+
+#game-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 450px;
+    width: 90%;
+    margin: 20px;
+}
+
+#icon-logo, #icon-shop, #icon-tutorial {
+    width: 80px;
+    position: relative;
+    left: 40%;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+#icon-shop {
+    width: 40px;
+}
+
+#icon-logo:hover, #icon-shop:hover {
+    transform: scale(1.1);
+}
+
+#inventory-container, #logros-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1e1e2f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 1000;
+    width: 50%;
+    height: 70%;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#inventory-container.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#inventory-container.hide {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+#item-info {
+    font-size: 18pt;
+    padding: 15px;
+    width: 350px;
+    height: 180px;
+    background: #005792;
+    color: #fdb44b;
+    border: 2px solid gold;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+
+
+#inventory-grid, #logros-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+#inventory-grid div {
+    background-color: #00bbf0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#inventory-grid div:hover {
+    background-color: #005792;
+}
+
+
+
+#close-inventory, #close-logros {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20pt;
+    color: #00204a;
+    transition: transform 0.3s ease-in-out;
+}
+
+#close-inventory:hover, #close-logros:hover {
+    color: #fdb44b;
+}
+
+#item-details {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#item-name {
+    font-size: 1.5em;
+    color: #ffffff; 
+}
+
+#item-image {
+    max-width: 100px;
+    margin: 10px 0;
+}
+
+#item-description {
+    font-size: 1em;
+    color: #d1d1e9;
+}
+
+#title-inventory {
+    color:#fdb44b;
+    font-size: 1.8rem;
+}
+
+#mascota {
+    width: 180px;
+    transition: transform 0.3s ease-in-out;
+}
+
+#mascota:active {
+    animation: click-animation 0.3s ease-in-out;
+}
+
+@keyframes click-animation {
+    0% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+button {
+    background: #ff6b81;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 10px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button:hover {
+    background-color: #21a1f1;
+}
+
+#stats {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.stat {
+    font-size: 1rem;
+    color: #333;
+    padding: 5px 10px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.coins, #stats {
+    margin-bottom: 20px;
+}
+
+#misiones-container {
+    flex: 0 0 300px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress {
+    height: 10px;
+    background-color: #4caf50;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+li {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+#logros li:hover {
+    transform: scale(1.02);
+}
+
+#logros li.completado {
+    background: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.finalizar {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.finalizar:hover {
+    background: #45a049;
+}
+
+.blurred {
+    filter: blur(5px);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.mission-completed {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+
+#mensajes-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mensaje {
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out, fadeOut 0.3s ease-in-out 4.7s;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Tipos de mensajes */
+.mensaje.success {
+    background-color: #28a745; /* Verde */
+    border: 1px solid #218838;
+}
+
+.mensaje.warning {
+    background-color: #ffc107; /* Amarillo */
+    border: 1px solid #e0a800;
+    color: #212529;
+}
+
+.mensaje.error {
+    background-color: #dc3545; /* Rojo */
+    border: 1px solid #c82333;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Level Up Information*/
+
+#nivelUpModal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url(../../assets/images/wallpaper_levelUp.png);
+    background-size: cover;
+    border: 2px solid #000;
+    padding: 20px;
+    z-index: 1000;
+    width: 55%;
+    height: 52%;
+    overflow-y: auto;
+    backdrop-filter: sepia(0.5);
+    border-radius:20px ;
+
+
+}
+
+#nuevoNivel{
+    color: #7fee60;
+    font-size: 25pt;
+    font-weight: bold;
+    text-shadow: 0 0 6px #000000;
+}
+
+#nivelUpModal p{
+    color: #7fee60;
+    font-size: 15pt;
+    text-shadow: 0 0 4px #000000;
+}
+
+#desbloqueos{
+    list-style-type: none;
+    padding: 0;
+
+}
+
+/* Memory Game */
+
+.memory-game {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 15%;
+    gap: 10px;
+}
+
+.memory-card {
+    width: 100px;
+    height: 140px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+}
+
+.memory-card .card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.memory-card.flip .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 5px;
+    background-size: cover;
+    backface-visibility: hidden;
+}
+
+.card-front {
+    transform: rotateY(180deg);
+}
+
+.card-back {
+    background-image: url('../assets/images/back.png');
+}
+
+#tutorial-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-content h2 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+  }
+
+  .modal-content p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+  }
+  
+  #close-tutorial {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+
+  #close-tutorial:hover {
+    background-color: #45a049;
+  }
+
+  #hideTutorial{
+    display: none !important;
+  } 
+
+  /* CSS for items */
+
+  .invisible-effect {
+    opacity: 0.2;
+    filter: blur(2px) brightness(150%) contrast(80%);
+    transition: all 0.5s ease-in-out;
+    pointer-events: none; /* Opcional: evita clics sobre la mascota invisible */
+  }
+  
